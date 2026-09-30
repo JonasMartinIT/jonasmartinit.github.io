@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jonas Martin | IT Support Quest</title>
+<meta name="description" content="Jonas Martin's IT portfolio: labs, projects and write-ups, presented as a quest log.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #140B2E;
+    --panel: #221650;
+    --panel-2: #2E1F66;
+    --text: #F4F1FF;
+    --muted: #C3B8EC;
+    --cyan: #22E4FF;
+    --pink: #FF4FA3;
+    --yellow: #FFD93D;
+    --green: #4DFF88;
+    --pixel: "Press Start 2P", "Courier New", monospace;
+    --body: "Chakra Petch", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 400 1.075rem/1.6 var(--body);
+    overflow-x: hidden;
+  }
+  #stars { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; }
+  a { color: var(--cyan); }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+  .wrap { max-width: 68rem; margin: 0 auto; padding: 0 1.25rem; }
+  h2 {
+    font: 400 clamp(1rem, 2.6vw, 1.4rem)/1.5 var(--pixel);
+    color: var(--yellow); margin: 0 0 1.5rem;
+    text-shadow: 3px 3px 0 var(--pink);
+  }
+  section { padding: 4rem 0; }
+
+  /* Pixel panel look: hard edges and a chunky offset shadow */
+  .panel {
+    background: var(--panel);
+    border: 3px solid var(--cyan);
+    box-shadow: 6px 6px 0 var(--pink);
+    padding: 1.5rem;
+  }
+
+  /* ---------- Title screen ---------- */
+  .title-screen {
+    min-height: 100vh; display: grid; place-items: center; text-align: center;
+    padding: 2rem 1.25rem;
+  }
+  .logo {
+    font: 400 clamp(1.8rem, 7vw, 4.2rem)/1.3 var(--pixel);
+    margin: 0; color: var(--cyan);
+    text-shadow: 4px 4px 0 var(--pink), 8px 8px 0 #000;
+    animation: float 3s ease-in-out infinite;
+  }
+  .subtitle { font: 400 clamp(.7rem, 2vw, 1rem)/1.8 var(--pixel); color: var(--yellow); margin: 1.5rem 0 .5rem; }
+  .tagline { color: var(--muted); max-width: 34rem; margin: 0 auto 2.5rem; font-size: 1.15rem; }
+  .start {
+    font: 400 1rem var(--pixel); cursor: pointer;
+    background: var(--pink); color: var(--text); border: 0;
+    padding: 1.1rem 1.6rem; box-shadow: 5px 5px 0 var(--cyan);
+    animation: blink 1.1s steps(2, start) infinite;
+  }
+  .start:hover { animation: none; transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--cyan); }
+  .menu { margin-top: 2rem; display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
+  .menu a { font: 400 .7rem var(--pixel); color: var(--text); text-decoration: none; }
+  .menu a::before { content: "\25B6"; color: var(--yellow); margin-right: .5rem; opacity: 0; }
+  .menu a:hover::before, .menu a:focus-visible::before { opacity: 1; }
+  @keyframes float { 50% { transform: translateY(-10px); } }
+  @keyframes blink { to { visibility: hidden; } }
+
+  /* ---------- Character sheet ---------- */
+  .sheet { display: grid; grid-template-columns: 220px 1fr; gap: 2rem; align-items: start; }
+  .avatar { background: var(--panel-2); border: 3px solid var(--yellow); padding: 1rem; text-align: center; }
+  .avatar svg { width: 100%; max-width: 180px; image-rendering: pixelated; animation: bob 1.6s steps(2) infinite; }
+  .avatar p { font: 400 .6rem/1.8 var(--pixel); color: var(--yellow); margin: .75rem 0 0; }
+  @keyframes bob { 50% { transform: translateY(-4px); } }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .75rem 1.5rem; margin: 0 0 1.5rem; }
+  .stats div { border-bottom: 2px dashed var(--panel-2); padding-bottom: .5rem; }
+  .stats dt { font: 400 .6rem var(--pixel); color: var(--pink); margin-bottom: .4rem; }
+  .stats dd { margin: 0; font-weight: 600; }
+  .xp-label { display: flex; justify-content: space-between; font: 400 .65rem var(--pixel); margin-bottom: .5rem; }
+  .xp-label span:last-child { color: var(--green); }
+  .xp { height: 26px; border: 3px solid var(--text); background: #0B0620; padding: 3px; }
+  .xp-fill {
+    height: 100%; width: 0; transition: width 1.6s steps(20);
+    background: repeating-linear-gradient(90deg, var(--green) 0 14px, #2FCB68 14px 18px);
+  }
+  .bio { margin: 1.5rem 0 0; color: var(--muted); max-width: 44rem; }
+
+  /* ---------- Quest log ---------- */
+  .tabs { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .tabs button {
+    font: 400 .65rem var(--pixel); cursor: pointer; padding: .8rem 1rem;
+    background: var(--panel); color: var(--text); border: 3px solid var(--panel-2);
+  }
+  .tabs button[aria-pressed="true"] { background: var(--yellow); color: var(--bg); border-color: var(--yellow); }
+  .quests { display: grid; gap: 1.25rem; }
+  .quest { background: var(--panel); border: 3px solid var(--cyan); box-shadow: 6px 6px 0 var(--pink); }
+  .quest[data-status="complete"] { border-color: var(--green); box-shadow: 6px 6px 0 var(--cyan); }
+  .quest[data-status="locked"] { border-color: var(--muted); border-style: dashed; box-shadow: 6px 6px 0 var(--panel-2); }
+  .quest-head {
+    width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    background: none; border: 0; color: inherit; text-align: left; cursor: pointer; padding: 1.25rem 1.5rem;
+    font: inherit;
+  }
+  .quest-type { display: block; font: 400 .55rem var(--pixel); color: var(--pink); margin-bottom: .5rem; }
+  .quest-title { font-weight: 700; font-size: 1.3rem; }
+  .badge { font: 400 .55rem var(--pixel); padding: .5rem .6rem; white-space: nowrap; }
+  [data-status="active"] .badge { background: var(--cyan); color: var(--bg); }
+  [data-status="complete"] .badge { background: var(--green); color: var(--bg); }
+  [data-status="locked"] .badge { background: var(--panel-2); color: var(--text); }
+  .chev { font-family: var(--pixel); color: var(--yellow); transition: transform .2s; }
+  .quest-head[aria-expanded="true"] .chev { transform: rotate(90deg); }
+  .quest-body { padding: 0 1.5rem 1.5rem; }
+  .quest-body[hidden] { display: none; }
+  .quest-body p { margin: 0 0 1rem; color: var(--muted); max-width: 60ch; }
+  .obj-title { font: 400 .6rem var(--pixel); color: var(--yellow); margin: 1rem 0 .6rem; }
+  .objectives { list-style: none; padding: 0; margin: 0; }
+  .objectives li { padding: .2rem 0 .2rem 2rem; position: relative; }
+  .objectives li::before {
+    content: ""; position: absolute; left: 0; top: .5rem; width: 14px; height: 14px;
+    border: 2px solid var(--text);
+  }
+  .objectives li.done { color: var(--muted); text-decoration: line-through; }
+  .objectives li.done::before { background: var(--green); border-color: var(--green); }
+  .rewards { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; padding: 0; margin: 0; }
+  .rewards li { background: var(--panel-2); border: 2px solid var(--yellow); padding: .15rem .6rem; font-size: .95rem; }
+  .writeup {
+    display: inline-block; margin-top: 1.25rem; font: 400 .65rem var(--pixel);
+    background: var(--pink); color: var(--text); text-decoration: none; padding: .8rem 1rem;
+    box-shadow: 4px 4px 0 var(--cyan);
+  }
+  .writeup:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--cyan); }
+  .quest[hidden] { display: none; }
+
+  /* ---------- Inventory ---------- */
+  .inventory { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: .75rem; }
+  .item {
+    aspect-ratio: 1; background: var(--panel-2); border: 3px solid var(--panel-2);
+    color: var(--text); font: 400 .7rem/1.3 var(--pixel); cursor: pointer; padding: .4rem;
+    display: grid; place-items: center; text-align: center;
+  }
+  .item:hover, .item:focus-visible, .item[aria-pressed="true"] { border-color: var(--yellow); background: var(--panel); }
+  .item-info { margin-top: 1.25rem; min-height: 3.5rem; border-top: 3px dashed var(--panel-2); padding-top: 1rem; }
+  .item-info strong { color: var(--yellow); display: block; }
+  .item-info span { color: var(--muted); }
+
+  /* ---------- World map (career history) ---------- */
+  .map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; position: relative; list-style: none; padding: 0; margin: 0; }
+  .map::before {
+    content: ""; position: absolute; top: 38px; left: 12%; right: 12%; height: 6px;
+    background: repeating-linear-gradient(90deg, var(--yellow) 0 12px, transparent 12px 20px);
+  }
+  .stage { text-align: center; position: relative; }
+  .node {
+    width: 76px; height: 76px; margin: 0 auto 1rem; display: grid; place-items: center;
+    background: var(--panel); border: 4px solid var(--cyan); font: 400 .7rem var(--pixel); color: var(--cyan);
+  }
+  .stage.cleared .node { border-color: var(--green); color: var(--green); }
+  .stage.current .node { border-color: var(--pink); color: var(--pink); animation: pulse 1.2s steps(2) infinite; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 6px var(--pink); } }
+  .stage strong { display: block; }
+  .stage span { color: var(--muted); font-size: .95rem; }
+  .here { display: block; font: 400 .5rem var(--pixel); color: var(--pink); margin-top: .5rem; }
+
+  /* ---------- Continue screen ---------- */
+  .continue { text-align: center; }
+  .continue .count { font: 400 3rem var(--pixel); color: var(--pink); margin: 0 0 1rem; }
+  .contact { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
+  .contact a {
+    font: 400 .7rem var(--pixel); text-decoration: none; padding: 1rem 1.2rem;
+    background: var(--panel); color: var(--text); border: 3px solid var(--cyan); box-shadow: 4px 4px 0 var(--pink);
+  }
+  .contact a:hover { background: var(--cyan); color: var(--bg); }
+  footer { text-align: center; color: var(--muted); padding: 2rem 1rem 3rem; font-size: .9rem; }
+  footer kbd { font-family: var(--pixel); font-size: .55rem; color: var(--yellow); }
+
+  /* ---------- Achievement toast ---------- */
+  .toast {
+    position: fixed; right: 1rem; bottom: 1rem; z-index: 50; max-width: 320px;
+    background: var(--bg); border: 3px solid var(--yellow); box-shadow: 5px 5px 0 var(--pink);
+    padding: .9rem 1rem; transform: translateY(160%); transition: transform .35s steps(6);
+  }
+  .toast.show { transform: translateY(0); }
+  .toast small { display: block; font: 400 .55rem var(--pixel); color: var(--yellow); margin-bottom: .4rem; }
+  .confetti { position: fixed; top: -12px; width: 10px; height: 10px; z-index: 40; pointer-events: none; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+  @media (max-width: 760px) {
+    .sheet { grid-template-columns: 1fr; }
+    .avatar { max-width: 240px; margin: 0 auto; }
+    .map { grid-template-columns: 1fr; gap: 1.5rem; }
+    .map::before { top: 0; bottom: 0; left: 36px; right: auto; width: 6px; height: auto;
+      background: repeating-linear-gradient(180deg, var(--yellow) 0 12px, transparent 12px 20px); }
+    .stage { display: grid; grid-template-columns: 76px 1fr; gap: 1rem; text-align: left; align-items: center; }
+    .node { margin: 0; }
+    .quest-head { padding: 1rem; }
+    .inventory { grid-template-columns: repeat(4, 1fr); gap: .5rem; }
+    .item { font-size: .55rem; }
+    .panel { padding: 1rem; }
+    .quest-body { padding: 0 1rem 1.25rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+<canvas id="stars" aria-hidden="true"></canvas>
+
+<!-- TITLE SCREEN -->
+<header class="title-screen">
+  <div>
+    <h1 class="logo">JONAS<br>MARTIN</h1>
+    <p class="subtitle">IT SUPPORT QUEST</p>
+    <p class="tagline">Administrative support specialist at UNC-Chapel Hill leveling up into IT. Every lab and project I finish gets logged here, bugs and fixes included.</p>
+    <button class="start" id="start" type="button">PRESS START</button>
+    <nav class="menu" aria-label="Main">
+      <a href="#player">Player</a>
+      <a href="#quests">Quests</a>
+      <a href="#inventory">Inventory</a>
+      <a href="#map">World map</a>
+      <!-- Put your resume in the repo as resume.pdf -->
+      <a href="resume.pdf" id="resume-link">Resume</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- PLAYER / CHARACTER SHEET -->
+  <section id="player">
+    <div class="wrap">
+      <h2>Player 1</h2>
+      <div class="panel sheet">
+        <div class="avatar">
+          <!-- Pixel avatar: a monitor wearing a support headset -->
+          <svg viewBox="0 0 16 16" shape-rendering="crispEdges" role="img" aria-label="Pixel art monitor wearing a headset">
+            <rect x="3" y="1" width="10" height="1" fill="#FF4FA3"/>
+            <rect x="2" y="2" width="1" height="2" fill="#FF4FA3"/>
+            <rect x="13" y="2" width="1" height="2" fill="#FF4FA3"/>
+            <rect x="2" y="3" width="12" height="9" fill="#22E4FF"/>
+            <rect x="3" y="4" width="10" height="7" fill="#140B2E"/>
+            <rect x="1" y="4" width="2" height="3" fill="#FF4FA3"/>
+            <rect x="13" y="4" width="2" height="3" fill="#FF4FA3"/>
+            <rect x="12" y="7" width="1" height="2" fill="#FF4FA3"/>
+            <rect x="11" y="9" width="1" height="1" fill="#FF4FA3"/>
+            <rect x="5" y="6" width="1" height="2" fill="#FFD93D"/>
+            <rect x="10" y="6" width="1" height="2" fill="#FFD93D"/>
+            <rect x="5" y="9" width="1" height="1" fill="#4DFF88"/>
+            <rect x="6" y="10" width="4" height="1" fill="#4DFF88"/>
+            <rect x="10" y="9" width="1" height="1" fill="#4DFF88"/>
+            <rect x="7" y="12" width="2" height="2" fill="#C3B8EC"/>
+            <rect x="5" y="14" width="6" height="1" fill="#C3B8EC"/>
+          </svg>
+          <p>LV <span id="level">1</span></p>
+        </div>
+        <div>
+          <dl class="stats">
+            <div><dt>CLASS</dt><dd>Support Specialist</dd></div>
+            <div><dt>HOME BASE</dt><dd>UNC-Chapel Hill, since 2020</dd></div>
+            <div><dt>GUILD</dt><dd>NC A&amp;T, B.S. Information Technology</dd></div>
+            <div><dt>NEXT LEVEL</dt><dd>Graduation, May 2027</dd></div>
+          </dl>
+          <div class="xp-label"><span>QUEST XP</span><span id="xp-text">0 / 0</span></div>
+          <div class="xp" role="progressbar" aria-label="Quest objectives completed" id="xp-bar" aria-valuemin="0">
+            <div class="xp-fill" id="xp-fill"></div>
+          </div>
+          <p class="bio">Four years as a leasing consultant and six at UNC taught me the people side of support: stay calm, find out what someone actually needs and follow through. Now I'm building the technical side one lab at a time. XP fills as I complete quest objectives below.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUEST LOG -->
+  <section id="quests">
+    <div class="wrap">
+      <h2>Quest log</h2>
+      <div class="tabs" role="group" aria-label="Filter quests">
+        <button type="button" data-filter="all" aria-pressed="true">ALL</button>
+        <button type="button" data-filter="active" aria-pressed="false">ACTIVE</button>
+        <button type="button" data-filter="complete" aria-pressed="false">COMPLETE</button>
+        <button type="button" data-filter="locked" aria-pressed="false">LOCKED</button>
+      </div>
+      <div class="quests" id="quest-list"></div>
+    </div>
+  </section>
+
+  <!-- INVENTORY -->
+  <section id="inventory">
+    <div class="wrap">
+      <h2>Inventory</h2>
+      <div class="panel">
+        <div class="inventory" id="items"></div>
+        <div class="item-info" id="item-info" aria-live="polite">
+          <strong>Select an item</strong><span>Tap any tool to see what I use it for.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORLD MAP -->
+  <section id="map">
+    <div class="wrap">
+      <h2>World map</h2>
+      <ol class="map">
+        <li class="stage cleared"><div class="node">1-1</div><div><strong>Leasing Consultant</strong><span>Ticon Properties, 4+ years</span></div></li>
+        <li class="stage cleared"><div class="node">1-2</div><div><strong>Administrative Support Specialist</strong><span>UNC-Chapel Hill, 2020 to now</span></div></li>
+        <li class="stage cleared"><div class="node">2-1</div><div><strong>Associate in Science</strong><span>Durham Tech, May 2024</span></div></li>
+        <li class="stage current"><div class="node">2-2</div><div><strong>B.S. Information Technology</strong><span>NC A&amp;T, May 2027</span><span class="here">YOU ARE HERE</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- CONTINUE / CONTACT -->
+  <section id="contact">
+    <div class="wrap panel continue">
+      <h2>Continue?</h2>
+      <p class="count" id="count" aria-hidden="true">9</p>
+      <p>Hiring for IT or end user support? Let's talk.</p>
+      <div class="contact">
+        <!-- Replace these with your real links -->
+        <a href="mailto:you@example.com">EMAIL</a>
+        <a href="https://www.linkedin.com/in/YOUR-PROFILE">LINKEDIN</a>
+        <a href="https://github.com/YOUR-USERNAME">GITHUB</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>Built by Jonas Martin, hosted on GitHub Pages. Psst: <kbd>&uarr; &uarr; &darr; &darr; &larr; &rarr; &larr; &rarr; B A</kbd></footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><small>ACHIEVEMENT UNLOCKED</small><span id="toast-text"></span></div>
+
+<script>
+/* =========================================================
+   EDIT YOUR QUESTS HERE
+   status: "active", "complete" or "locked" (locked = planned)
+   Set done: true on an objective when you finish it.
+   XP and level update automatically.
+   ========================================================= */
+const QUESTS = [
+  {
+    title: "Smart Lock and Access Log System",
+    type: "MAIN QUEST",
+    status: "active",
+    desc: "Senior capstone. An RFID access control system that logs every entry attempt for auditing. I'm the web panel and documentation lead on a three-person team.",
+    objectives: [
+      { text: "Write the team project proposal", done: true },
+      { text: "Form team and assign roles", done: true },
+      { text: "Build the web admin panel", done: false },
+      { text: "Write the final system documentation", done: false }
+    ],
+    rewards: ["Web development", "Access control", "Technical writing", "Teamwork"],
+    link: "https://github.com/YOUR-USERNAME/smart-lock"
+  },
+  {
+    title: "Ninth Street Books database",
+    type: "SIDE QUEST",
+    status: "active",
+    desc: "A relational database for a bookstore management application built around an independent bookstore.",
+    objectives: [
+      { text: "Design the relational model", done: true },
+      { text: "Normalize the database design", done: false }
+    ],
+    rewards: ["SQL", "Database design", "Normalization"],
+    link: "https://github.com/YOUR-USERNAME/ninth-street-books"
+  },
+  {
+    title: "Build this portfolio site",
+    type: "SIDE QUEST",
+    status: "complete",
+    desc: "Hand-built with HTML, CSS and JavaScript and deployed on GitHub Pages. No templates or site builders.",
+    objectives: [
+      { text: "Design and code the site", done: true },
+      { text: "Deploy on GitHub Pages", done: true }
+    ],
+    rewards: ["HTML and CSS", "JavaScript", "Git and GitHub"],
+    link: "https://github.com/YOUR-USERNAME/YOUR-USERNAME.github.io"
+  },
+  {
+    title: "Active Directory homelab",
+    type: "MAIN QUEST",
+    status: "locked",
+    desc: "Stand up a Windows domain in VirtualBox and manage it like a real help desk would.",
+    objectives: [
+      { text: "Install Windows Server and promote a domain controller", done: false },
+      { text: "Create users, groups and OUs", done: false },
+      { text: "Apply Group Policy", done: false },
+      { text: "Join a Windows client to the domain", done: false }
+    ],
+    rewards: ["Active Directory", "Group Policy", "Virtualization"],
+    link: "https://github.com/YOUR-USERNAME/ad-homelab"
+  },
+  {
+    title: "Help desk automation scripts",
+    type: "SIDE QUEST",
+    status: "locked",
+    desc: "PowerShell scripts that handle common tickets faster.",
+    objectives: [
+      { text: "Bulk user creation from a CSV", done: false },
+      { text: "Password reset and account unlock", done: false }
+    ],
+    rewards: ["PowerShell", "Automation"],
+    link: "https://github.com/YOUR-USERNAME/helpdesk-scripts"
+  },
+  {
+    title: "PC build and repair log",
+    type: "SIDE QUEST",
+    status: "locked",
+    desc: "Photos, parts lists and troubleshooting notes from hardware builds and repairs.",
+    objectives: [
+      { text: "Document one full build", done: false },
+      { text: "Document one repair from diagnosis to fix", done: false }
+    ],
+    rewards: ["Hardware", "Troubleshooting"],
+    link: "https://github.com/YOUR-USERNAME/pc-build-log"
+  }
+];
+
+/* EDIT YOUR INVENTORY HERE */
+const ITEMS = [
+  ["AD", "Active Directory", "User, group and policy management"],
+  ["PS", "PowerShell", "Automating Windows admin tasks"],
+  ["WS", "Wireshark", "Capturing and reading network traffic"],
+  ["VB", "VirtualBox", "Running homelab virtual machines"],
+  ["WIN", "Windows", "Desktop support and administration"],
+  ["MAC", "macOS", "Desktop support"],
+  ["LNX", "Linux", "Ubuntu, Debian, CentOS and Kali"],
+  ["SH", "Bash", "Shell scripting on Linux"],
+  ["PY", "Python", "Scripting and automation"],
+  ["SQL", "SQL", "Querying and designing databases"],
+  ["WEB", "HTML and CSS", "Building web pages like this one"],
+  ["PHP", "PHP", "Server-side web code"],
+  ["JV", "Java", "Object-oriented programming"],
+  ["R", "R", "Data analysis"],
+  ["XMP", "XAMPP", "Local web server stack"]
+];
+
+/* ---------- Achievements ---------- */
+const unlocked = new Set();
+const toast = document.getElementById('toast');
+let toastTimer;
+function achieve(key, text) {
+  if (unlocked.has(key)) return;
+  unlocked.add(key);
+  document.getElementById('toast-text').textContent = text;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+}
+
+/* ---------- Render quests ---------- */
+const list = document.getElementById('quest-list');
+const label = { active: "ACTIVE", complete: "COMPLETE", locked: "LOCKED" };
+QUESTS.forEach((q, i) => {
+  const el = document.createElement('article');
+  el.className = 'quest';
+  el.dataset.status = q.status;
+  el.innerHTML = `
+    <button class="quest-head" type="button" aria-expanded="false" aria-controls="q${i}">
+      <span><span class="quest-type">${q.type}</span><span class="quest-title">${q.title}</span></span>
+      <span style="display:flex;gap:1rem;align-items:center"><span class="badge">${label[q.status]}</span><span class="chev" aria-hidden="true">&#9654;</span></span>
+    </button>
+    <div class="quest-body" id="q${i}" hidden>
+      <p>${q.desc}</p>
+      <p class="obj-title">OBJECTIVES</p>
+      <ul class="objectives">${q.objectives.map(o => `<li class="${o.done ? 'done' : ''}">${o.text}</li>`).join('')}</ul>
+      <p class="obj-title">REWARDS</p>
+      <ul class="rewards">${q.rewards.map(r => `<li>${r}</li>`).join('')}</ul>
+      ${q.status === 'locked' ? '' : `<a class="writeup" href="${q.link}">VIEW WRITE-UP</a>`}
+    </div>`;
+  const head = el.querySelector('.quest-head');
+  head.addEventListener('click', () => {
+    const open = head.getAttribute('aria-expanded') === 'true';
+    head.setAttribute('aria-expanded', String(!open));
+    el.querySelector('.quest-body').hidden = open;
+    if (!open) achieve('quest', 'Quest inspector: opened a quest');
+  });
+  list.appendChild(el);
+});
+
+/* Quest filters */
+document.querySelectorAll('.tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+    const f = btn.dataset.filter;
+    document.querySelectorAll('.quest').forEach(q => { q.hidden = f !== 'all' && q.dataset.status !== f; });
+  });
+});
+
+/* ---------- XP and level from real objectives ---------- */
+const all = QUESTS.flatMap(q => q.objectives);
+const done = all.filter(o => o.done).length;
+document.getElementById('xp-text').textContent = `${done} / ${all.length}`;
+document.getElementById('level').textContent = 1 + Math.floor(done / 3);
+const bar = document.getElementById('xp-bar');
+bar.setAttribute('aria-valuemax', all.length);
+bar.setAttribute('aria-valuenow', done);
+const fill = document.getElementById('xp-fill');
+new IntersectionObserver((entries, obs) => {
+  if (entries[0].isIntersecting) { fill.style.width = (done / all.length * 100) + '%'; obs.disconnect(); }
+}, { threshold: .5 }).observe(bar);
+
+/* ---------- Inventory ---------- */
+const items = document.getElementById('items');
+const info = document.getElementById('item-info');
+ITEMS.forEach(([abbr, name, use]) => {
+  const b = document.createElement('button');
+  b.className = 'item'; b.type = 'button'; b.textContent = abbr;
+  b.setAttribute('aria-label', name); b.setAttribute('aria-pressed', 'false');
+  b.addEventListener('click', () => {
+    items.querySelectorAll('.item').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    info.innerHTML = `<strong>${name}</strong><span>${use}</span>`;
+    achieve('item', 'Looter: inspected an item');
+  });
+  items.appendChild(b);
+});
+
+/* ---------- Title screen + other triggers ---------- */
+document.getElementById('start').addEventListener('click', () => {
+  document.getElementById('player').scrollIntoView();
+  achieve('start', 'Player 1 has entered the game');
+});
+document.getElementById('resume-link').addEventListener('click', () => achieve('resume', 'Recruiter mode: opened the resume'));
+
+/* Continue countdown loops while contact section is visible */
+const countEl = document.getElementById('count');
+let n = 9, countTimer = null;
+new IntersectionObserver(([e]) => {
+  if (e.isIntersecting && !countTimer) {
+    countTimer = setInterval(() => { n = n <= 0 ? 9 : n - 1; countEl.textContent = n; }, 1000);
+  } else if (!e.isIntersecting) { clearInterval(countTimer); countTimer = null; }
+}).observe(countEl);
+
+/* ---------- Konami code easter egg ---------- */
+const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+let pos = 0;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+addEventListener('keydown', e => {
+  pos = (e.key === code[pos] || e.key.toLowerCase() === code[pos]) ? pos + 1 : (e.key === code[0] ? 1 : 0);
+  if (pos === code.length) {
+    pos = 0;
+    unlocked.delete('konami');
+    achieve('konami', 'Cheat code accepted: hire Jonas');
+    if (reduce) return;
+    const colors = ['#22E4FF', '#FF4FA3', '#FFD93D', '#4DFF88'];
+    for (let i = 0; i < 80; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.background = colors[i % 4];
+      c.style.animationDuration = 1.5 + Math.random() * 2 + 's';
+      c.style.animationDelay = Math.random() * .5 + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4500);
+    }
+  }
+});
+
+/* ---------- Starfield background ---------- */
+const cv = document.getElementById('stars');
+const ctx = cv.getContext('2d');
+let stars = [];
+function size() {
+  cv.width = innerWidth; cv.height = innerHeight;
+  stars = Array.from({ length: Math.floor(innerWidth * innerHeight / 9000) }, () => ({
+    x: Math.random() * cv.width, y: Math.random() * cv.height,
+    s: Math.random() < .15 ? 3 : 2, v: .2 + Math.random() * .8
+  }));
+}
+function draw() {
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  stars.forEach(st => {
+    ctx.fillStyle = st.s === 3 ? '#FFD93D' : '#C3B8EC';
+    ctx.fillRect(Math.round(st.x), Math.round(st.y), st.s, st.s);
+    if (!reduce) { st.y += st.v; if (st.y > cv.height) { st.y = 0; st.x = Math.random() * cv.width; } }
+  });
+  if (!reduce) requestAnimationFrame(draw);
+}
+addEventListener('resize', () => { size(); if (reduce) draw(); });
+size(); draw();
+</script>
+</body>
+</html>
