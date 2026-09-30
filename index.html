@@ -525,6 +525,7 @@ body.game .rewards li { font-size: .95rem; }
 <script>
 /* =========================================================
    EDIT YOUR PROJECTS, CERTIFICATIONS AND SKILLS BELOW
+   A project's "Read the write-up" button only shows once its link is filled in.
    ========================================================= */
 const QUESTS = [
   {
@@ -537,7 +538,7 @@ const QUESTS = [
       { text: "Write the final system documentation", done: false }
     ],
     rewards: ["Web development", "Access control", "Technical writing", "Teamwork"],
-    link: "https://github.com/JonasMartinIT/smart-lock"
+    link: ""  // paste the write-up link here, e.g. https://github.com/JonasMartinIT/smart-lock
   },
   {
     title: "Ninth Street Books database", type: "SIDE QUEST", status: "active",
@@ -547,7 +548,7 @@ const QUESTS = [
       { text: "Normalize the database design", done: false }
     ],
     rewards: ["SQL", "Database design", "Normalization"],
-    link: "https://github.com/JonasMartinIT/ninth-street-books"
+    link: ""  // paste the write-up link here, e.g. https://github.com/JonasMartinIT/ninth-street-books
   },
   {
     title: "Portfolio website", type: "SIDE QUEST", status: "complete",
@@ -558,7 +559,7 @@ const QUESTS = [
       { text: "Deploy on GitHub Pages", done: true }
     ],
     rewards: ["HTML and CSS", "JavaScript", "Git and GitHub"],
-    link: "https://github.com/JonasMartinIT/jonasmartinit"
+    link: "https://github.com/JonasMartinIT/jonasmartinit.github.io"
   },
   {
     title: "Active Directory homelab", type: "MAIN QUEST", status: "locked",
@@ -570,7 +571,7 @@ const QUESTS = [
       { text: "Join a Windows client to the domain", done: false }
     ],
     rewards: ["Active Directory", "Group Policy", "Virtualization"],
-    link: "https://github.com/JonasMartinIT/ad-homelab"
+    link: ""  // paste the write-up link here, e.g. https://github.com/JonasMartinIT/ad-homelab
   },
   {
     title: "PowerShell automation scripts", type: "SIDE QUEST", status: "locked",
@@ -580,7 +581,7 @@ const QUESTS = [
       { text: "Password reset and account unlock", done: false }
     ],
     rewards: ["PowerShell", "Automation"],
-    link: "https://github.com/JonasMartinIT/powershell-scripts"
+    link: ""  // paste the write-up link here, e.g. https://github.com/JonasMartinIT/powershell-scripts
   },
   {
     title: "PC build and repair log", type: "SIDE QUEST", status: "locked",
@@ -590,7 +591,7 @@ const QUESTS = [
       { text: "Document one repair from diagnosis to fix", done: false }
     ],
     rewards: ["Hardware", "Troubleshooting"],
-    link: "https://github.com/JonasMartinIT/pc-build-log"
+    link: ""  // paste the write-up link here, e.g. https://github.com/JonasMartinIT/pc-build-log
   }
 ];
 
@@ -657,7 +658,7 @@ QUESTS.forEach((q, i) => {
       <ul class="objectives">${q.objectives.map(o => `<li class="${o.done ? 'done' : ''}">${o.text}</li>`).join('')}</ul>
       <p class="sub">${both(["Skills used", "REWARDS"])}</p>
       <ul class="rewards">${q.rewards.map(r => `<li>${r}</li>`).join('')}</ul>
-      ${q.status === 'locked' ? '' : `<a class="writeup" href="${q.link}">${both(["Read the write-up", "VIEW WRITE-UP"])}</a>`}
+      ${!q.link ? '' : `<a class="writeup" href="${q.link}">${both(["Read the write-up", "VIEW WRITE-UP"])}</a>`}
     </div>`;
   const head = el.querySelector('.quest-head');
   head.addEventListener('click', () => {
