@@ -3,398 +3,532 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jonas Martin | Tech Quest</title>
-<meta name="description" content="Jonas Martin's IT portfolio: labs, projects and write-ups, presented as a quest log.">
+<title>Jonas Martin | IT Portfolio</title>
+<meta name="description" content="Jonas Martin: IT student and career changer. Projects, certifications, skills and experience.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,600..800&family=IBM+Plex+Sans:wght@400;500;600;700&family=Press+Start+2P&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #140B2E;
-    --panel: #221650;
-    --panel-2: #2E1F66;
-    --text: #F4F1FF;
-    --muted: #C3B8EC;
-    --cyan: #22E4FF;
-    --pink: #FF4FA3;
-    --yellow: #FFD93D;
-    --green: #4DFF88;
-    --pixel: "Press Start 2P", "Courier New", monospace;
-    --body: "Chakra Petch", system-ui, sans-serif;
-  }
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    margin: 0; background: var(--bg); color: var(--text);
-    font: 400 1.075rem/1.6 var(--body);
-    overflow-x: hidden;
-  }
-  #stars { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; }
-  a { color: var(--cyan); }
-  a:focus-visible, button:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
-  .wrap { max-width: 68rem; margin: 0 auto; padding: 0 1.25rem; }
-  h2 {
-    font: 400 clamp(1rem, 2.6vw, 1.4rem)/1.5 var(--pixel);
-    color: var(--yellow); margin: 0 0 1.5rem;
-    text-shadow: 3px 3px 0 var(--pink);
-  }
-  section { padding: 4rem 0; }
+/* =====================================================
+   SHARED STRUCTURE (both modes)
+   ===================================================== */
+:root {
+  --bg: #FFFFFF; --paper: #FFFFFF; --soft: #F4F4F2; --ink: #141414; --text: #3A3A3A; --muted: #6E6E6E; --line: #E4E4E0;
+  --red: #C8102E; --plan: #A3A3A3;
+  --head: "Archivo", system-ui, sans-serif; --body: "IBM Plex Sans", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; color: var(--text); font: 400 1.05rem/1.65 var(--body); overflow-x: hidden; }
+a { color: var(--ink); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+.wrap { max-width: 68rem; margin: 0 auto; padding: 0 1.25rem; }
+.g { display: none !important; }
+body.game .g { display: revert !important; }
+body.game .p { display: none !important; }
+#stars { display: none; }
+.topbar { position: sticky; top: 0; z-index: 20; }
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: .8rem; padding-bottom: .8rem; }
+.brand { text-decoration: none; }
+.nav { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
+.nav a { text-decoration: none; }
+.toggle { cursor: pointer; padding: .5rem .95rem; }
+.hero h1 { margin: 0 0 1rem; }
+.subtitle { margin: 0 0 1rem; }
+.tagline { max-width: 40rem; }
+.hl { background: none; color: inherit; }
+.actions { display: flex; gap: .75rem; flex-wrap: wrap; align-items: center; }
+.btn { display: inline-block; padding: .8rem 1.3rem; font-weight: 700; text-decoration: none; }
+section { padding: 4rem 0; }
+h2 { margin: 0 0 1.5rem; text-align: center; }
+.panel { padding: 1.75rem; }
+.sheet { display: grid; gap: 1.5rem; }
+.avatar { display: none; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem 2rem; margin: 0; }
+.stats dd { margin: .15rem 0 0; font-weight: 600; }
+.xp-wrap { display: none; }
+.tabs { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1.75rem; }
+.tabs button { cursor: pointer; }
+.quests { display: grid; gap: 1.5rem; }
+.quest { position: relative; }
+.quest[hidden] { display: none; }
+.quest-head { width: 100%; display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; background: none; border: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; padding: 1.4rem 1.5rem; }
+.quest-title, .quest-desc { display: block; }
+.quest-desc { margin-top: .4rem; }
+.head-right { display: flex; align-items: center; gap: .8rem; flex-shrink: 0; }
+.badge { display: inline-block; white-space: nowrap; }
+.chev { transition: transform .2s; font-size: .8rem; }
+.quest-head[aria-expanded="true"] .chev { transform: rotate(90deg); }
+.quest-body { padding: 0 1.5rem 1.5rem; }
+.quest-body[hidden] { display: none; }
+.sub { margin: 1rem 0 .5rem; }
+.objectives { list-style: none; padding: 0; margin: 0; }
+.objectives li { padding: .2rem 0 .2rem 1.9rem; position: relative; }
+.objectives li::before { content: ""; position: absolute; left: 0; top: .5rem; width: 14px; height: 14px; border: 2px solid var(--plan); }
+.rewards { display: flex; flex-wrap: wrap; gap: .4rem; list-style: none; padding: 0; margin: 0; }
+.rewards li { padding: .15rem .6rem; }
+.writeup { display: inline-block; margin-top: 1.25rem; }
+.trophies { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 300px)); justify-content: center; gap: 1.5rem; }
+.trophy { position: relative; padding: 1.5rem; }
+.trophy-icon { display: none; }
+.trophy h3 { margin: 0; }
+.trophy .issuer { margin: .15rem 0 .9rem; }
+.trophy a { display: inline-block; margin-top: .75rem; font-weight: 700; }
+.item { cursor: pointer; }
+.item-info { margin-top: 1.25rem; padding-top: 1rem; min-height: 3.5rem; }
+.item-info strong { display: block; }
+.map { list-style: none; padding: 0; margin: 0 auto; position: relative; }
+.node { display: none; }
+.stage strong, .here { display: block; }
+.contact { display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center; margin-top: 1.25rem; }
+footer { padding: 2rem 1.25rem 3rem; text-align: center; font-size: .9rem; }
+.toast { display: none; }
 
-  /* Pixel panel look: hard edges and a chunky offset shadow */
-  .panel {
-    background: var(--panel);
-    border: 3px solid var(--cyan);
-    box-shadow: 6px 6px 0 var(--pink);
-    padding: 1.5rem;
-  }
+/* =====================================================
+   PROFESSIONAL MODE (only when game mode is off)
+   ===================================================== */
+body:not(.game) { background: var(--bg); }
+body:not(.game) ::selection { background: #FFD23F; color: #141414; }
+body:not(.game) .topbar { background: rgba(255,255,255,.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+body:not(.game) .topbar .wrap { max-width: 76rem; padding-left: 2rem; padding-right: 2rem; }
+body:not(.game) .brand { font: 800 1.05rem var(--head); font-stretch: 88%; color: var(--ink); letter-spacing: .01em; }
+body:not(.game) .nav a { color: var(--text); font-weight: 500; font-size: .93rem; }
+body:not(.game) .nav a:hover { color: var(--ink); }
+body:not(.game) .toggle { font: 500 .85rem var(--body); border: 1px solid var(--line); border-radius: 999px; background: var(--paper); color: var(--text); transition: border-color .15s; }
+body:not(.game) .toggle:hover { border-color: var(--ink); color: var(--ink); }
 
-  /* ---------- Title screen ---------- */
-  .title-screen {
-    min-height: 100vh; display: grid; place-items: center; text-align: center;
-    padding: 2rem 1.25rem;
-  }
-  .logo {
-    font: 400 clamp(1.8rem, 7vw, 4.2rem)/1.3 var(--pixel);
-    margin: 0; color: var(--cyan);
-    text-shadow: 4px 4px 0 var(--pink), 8px 8px 0 #000;
-    animation: float 3s ease-in-out infinite;
-  }
-  .subtitle { font: 400 clamp(.7rem, 2vw, 1rem)/1.8 var(--pixel); color: var(--yellow); margin: 1.5rem 0 .5rem; }
-  .tagline { color: var(--muted); max-width: 34rem; margin: 0 auto 2.5rem; font-size: 1.15rem; }
-  .start {
-    font: 400 1rem var(--pixel); cursor: pointer;
-    background: var(--pink); color: var(--text); border: 0;
-    padding: 1.1rem 1.6rem; box-shadow: 5px 5px 0 var(--cyan);
-    animation: blink 1.1s steps(2, start) infinite;
-  }
-  .start:hover { animation: none; transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--cyan); }
-  .menu { margin-top: 2rem; display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
-  .menu a { font: 400 .7rem var(--pixel); color: var(--text); text-decoration: none; }
-  .menu a::before { content: "\25B6"; color: var(--yellow); margin-right: .5rem; opacity: 0; }
-  .menu a:hover::before, .menu a:focus-visible::before { opacity: 1; }
-  @keyframes float { 50% { transform: translateY(-10px); } }
-  @keyframes blink { to { visibility: hidden; } }
+/* Two-column layout: sticky profile on the left, work on the right */
+body:not(.game) main { display: grid; grid-template-columns: 21rem minmax(0, 1fr); column-gap: 4.5rem; max-width: 76rem; margin: 0 auto; padding: 0 2rem; }
+body:not(.game) main .wrap { max-width: none; padding: 0; }
+body:not(.game) .hero { grid-column: 1; grid-row: 1 / span 6; align-self: start; padding: 3.5rem 0 3rem; }
+@media (min-width: 961px) and (min-height: 760px) { body:not(.game) .hero { position: sticky; top: 3.5rem; padding-top: 2.5rem; } }
+body:not(.game) main > section { grid-column: 2; padding: 3.5rem 0; border-bottom: 1px solid var(--line); }
+body:not(.game) main > section:last-of-type { border-bottom: 0; }
 
-  /* ---------- Character sheet ---------- */
-  .sheet { display: grid; grid-template-columns: 220px 1fr; gap: 2rem; align-items: start; }
-  .avatar { background: var(--panel-2); border: 3px solid var(--yellow); padding: 1rem; text-align: center; }
-  .avatar svg { width: 100%; max-width: 180px; image-rendering: pixelated; animation: bob 1.6s steps(2) infinite; }
-  .avatar p { font: 400 .6rem/1.8 var(--pixel); color: var(--yellow); margin: .75rem 0 0; }
-  @keyframes bob { 50% { transform: translateY(-4px); } }
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .75rem 1.5rem; margin: 0 0 1.5rem; }
-  .stats div { border-bottom: 2px dashed var(--panel-2); padding-bottom: .5rem; }
-  .stats dt { font: 400 .6rem var(--pixel); color: var(--pink); margin-bottom: .4rem; }
-  .stats dd { margin: 0; font-weight: 600; }
-  .xp-label { display: flex; justify-content: space-between; font: 400 .65rem var(--pixel); margin-bottom: .5rem; }
-  .xp-label span:last-child { color: var(--green); }
-  .xp { height: 26px; border: 3px solid var(--text); background: #0B0620; padding: 3px; }
-  .xp-fill {
-    height: 100%; width: 0; transition: width 1.6s steps(20);
-    background: repeating-linear-gradient(90deg, var(--green) 0 14px, #2FCB68 14px 18px);
-  }
-  .bio { margin: 1.5rem 0 0; color: var(--muted); max-width: 44rem; }
+/* Profile */
+body:not(.game) .photo { width: 100%; max-width: 8.5rem; aspect-ratio: 1; background: var(--soft); border-radius: 6px; overflow: hidden; position: relative; display: grid; place-items: center; margin-bottom: 1.4rem; }
+body:not(.game) .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+body:not(.game) .initials { font: 800 2.6rem var(--head); color: #C9C9C4; }
+body:not(.game) .hero h1 { font: 800 clamp(2.3rem, 3.4vw, 2.9rem)/1 var(--head); font-stretch: 85%; letter-spacing: -.02em; color: var(--ink); margin-bottom: .55rem; }
+body:not(.game) .subtitle { font: 600 1rem var(--body); color: var(--red); margin-bottom: 1.25rem; }
+body:not(.game) .tagline { color: var(--text); font-size: 1rem; margin: 0 0 1.25rem; }
+body:not(.game) .status { display: flex; gap: .6rem; align-items: flex-start; font-size: .9rem; color: var(--muted); margin: 0 0 1.4rem; }
+body:not(.game) .status .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: #2E9E5B; margin-top: .5rem; animation: avail 2.4s infinite; }
+@keyframes avail { 0% { box-shadow: 0 0 0 0 rgba(46,158,91,.5); } 70%, 100% { box-shadow: 0 0 0 8px rgba(46,158,91,0); } }
+body:not(.game) .actions { gap: .6rem; }
+body:not(.game) .btn { border-radius: 6px; font: 600 .9rem var(--body); padding: .6rem .95rem; border: 1px solid var(--ink); transition: background .15s, color .15s, border-color .15s; }
+body:not(.game) .btn.primary { background: var(--ink); color: #fff; }
+body:not(.game) .btn.primary:hover { background: var(--red); border-color: var(--red); }
+body:not(.game) .btn.secondary { background: transparent; color: var(--ink); }
+body:not(.game) .btn.secondary:hover { background: var(--ink); color: #fff; }
+body:not(.game) .links { list-style: none; padding: 0; margin: 1.4rem 0 0; display: grid; gap: .4rem; font-size: .92rem; }
+body:not(.game) .links span { display: inline-block; width: 4.6rem; color: var(--muted); }
+body:not(.game) .links a, body:not(.game) .writeup, body:not(.game) .trophy a { text-decoration: none; background-image: linear-gradient(var(--red), var(--red)); background-size: 0 1px; background-repeat: no-repeat; background-position: 0 100%; transition: background-size .25s; }
+body:not(.game) .links a { color: var(--ink); font-weight: 500; }
+body:not(.game) .links a:hover, body:not(.game) .writeup:hover, body:not(.game) .trophy a:hover { background-size: 100% 1px; }
+body:not(.game) .hint { margin: 1.25rem 0 0; font-size: .85rem; color: var(--muted); }
+body:not(.game) .hint button { font: inherit; color: var(--text); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 
-  /* ---------- Quest log ---------- */
-  .tabs { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-  .tabs button {
-    font: 400 .65rem var(--pixel); cursor: pointer; padding: .8rem 1rem;
-    background: var(--panel); color: var(--text); border: 3px solid var(--panel-2);
-  }
-  .tabs button[aria-pressed="true"] { background: var(--yellow); color: var(--bg); border-color: var(--yellow); }
-  .quests { display: grid; gap: 1.25rem; }
-  .quest { background: var(--panel); border: 3px solid var(--cyan); box-shadow: 6px 6px 0 var(--pink); }
-  .quest[data-status="complete"] { border-color: var(--green); box-shadow: 6px 6px 0 var(--cyan); }
-  .quest[data-status="locked"] { border-color: var(--muted); border-style: dashed; box-shadow: 6px 6px 0 var(--panel-2); }
-  .quest-head {
-    width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 1rem;
-    background: none; border: 0; color: inherit; text-align: left; cursor: pointer; padding: 1.25rem 1.5rem;
-    font: inherit;
-  }
-  .quest-type { display: block; font: 400 .55rem var(--pixel); color: var(--pink); margin-bottom: .5rem; }
-  .quest-title { font-weight: 700; font-size: 1.3rem; }
-  .badge { font: 400 .55rem var(--pixel); padding: .5rem .6rem; white-space: nowrap; }
-  [data-status="active"] .badge { background: var(--cyan); color: var(--bg); }
-  [data-status="complete"] .badge { background: var(--green); color: var(--bg); }
-  [data-status="locked"] .badge { background: var(--panel-2); color: var(--text); }
-  .chev { font-family: var(--pixel); color: var(--yellow); transition: transform .2s; }
-  .quest-head[aria-expanded="true"] .chev { transform: rotate(90deg); }
-  .quest-body { padding: 0 1.5rem 1.5rem; }
-  .quest-body[hidden] { display: none; }
-  .quest-body p { margin: 0 0 1rem; color: var(--muted); max-width: 60ch; }
-  .obj-title { font: 400 .6rem var(--pixel); color: var(--yellow); margin: 1rem 0 .6rem; }
-  .objectives { list-style: none; padding: 0; margin: 0; }
-  .objectives li { padding: .2rem 0 .2rem 2rem; position: relative; }
-  .objectives li::before {
-    content: ""; position: absolute; left: 0; top: .5rem; width: 14px; height: 14px;
-    border: 2px solid var(--text);
-  }
-  .objectives li.done { color: var(--muted); text-decoration: line-through; }
-  .objectives li.done::before { background: var(--green); border-color: var(--green); }
-  .rewards { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; padding: 0; margin: 0; }
-  .rewards li { background: var(--panel-2); border: 2px solid var(--yellow); padding: .15rem .6rem; font-size: .95rem; }
-  .writeup {
-    display: inline-block; margin-top: 1.25rem; font: 400 .65rem var(--pixel);
-    background: var(--pink); color: var(--text); text-decoration: none; padding: .8rem 1rem;
-    box-shadow: 4px 4px 0 var(--cyan);
-  }
-  .writeup:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--cyan); }
-  .quest[hidden] { display: none; }
+/* Section headings */
+body:not(.game) h2 { display: flex; align-items: baseline; gap: .7rem; text-align: left; font: 800 1.9rem/1.1 var(--head); font-stretch: 85%; color: var(--ink); margin-bottom: 1.5rem; }
+body:not(.game) h2::before { content: ""; flex: none; width: .5rem; height: .5rem; background: var(--red); transform: translateY(-.2em); }
+body:not(.game) .intro { color: var(--muted); max-width: 38rem; margin: -.75rem 0 1.5rem; }
+body:not(.game) .panel { background: none; border: 0; padding: 0; }
 
-  /* ---------- Inventory ---------- */
-  .inventory { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: .75rem; }
-  .item {
-    aspect-ratio: 1; background: var(--panel-2); border: 3px solid var(--panel-2);
-    color: var(--text); font: 400 .7rem/1.3 var(--pixel); cursor: pointer; padding: .4rem;
-    display: grid; place-items: center; text-align: center;
-  }
-  .item:hover, .item:focus-visible, .item[aria-pressed="true"] { border-color: var(--yellow); background: var(--panel); }
-  .item-info { margin-top: 1.25rem; min-height: 3.5rem; border-top: 3px dashed var(--panel-2); padding-top: 1rem; }
-  .item-info strong { color: var(--yellow); display: block; }
-  .item-info span { color: var(--muted); }
+/* About */
+body:not(.game) .sheet > div:last-child { display: flex; flex-direction: column; }
+body:not(.game) .bio { order: -1; font-size: 1.22rem; line-height: 1.6; color: var(--ink); margin: 0 0 2rem; max-width: 42rem; }
+body:not(.game) .stats { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.25rem 2rem; border-top: 1px solid var(--line); padding-top: 1.5rem; }
+body:not(.game) .stats dt { font-size: .82rem; color: var(--muted); }
+body:not(.game) .stats dd { color: var(--ink); }
+body:not(.game) .strengths { margin-top: 1.75rem; }
+body:not(.game) .strengths p { font-size: .82rem; color: var(--muted); margin: 0 0 .6rem; }
+body:not(.game) .strengths ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .45rem; }
+body:not(.game) .strengths li { font-size: .9rem; font-weight: 500; padding: .3rem .8rem; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); }
 
-  /* ---------- World map (career history) ---------- */
-  .map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; position: relative; list-style: none; padding: 0; margin: 0; }
-  .map::before {
-    content: ""; position: absolute; top: 38px; left: 12%; right: 12%; height: 6px;
-    background: repeating-linear-gradient(90deg, var(--yellow) 0 12px, transparent 12px 20px);
-  }
-  .stage { text-align: center; position: relative; }
-  .node {
-    width: 76px; height: 76px; margin: 0 auto 1rem; display: grid; place-items: center;
-    background: var(--panel); border: 4px solid var(--cyan); font: 400 .7rem var(--pixel); color: var(--cyan);
-  }
-  .stage.cleared .node { border-color: var(--green); color: var(--green); }
-  .stage.current .node { border-color: var(--pink); color: var(--pink); animation: pulse 1.2s steps(2) infinite; }
-  @keyframes pulse { 50% { box-shadow: 0 0 0 6px var(--pink); } }
-  .stage strong { display: block; }
-  .stage span { color: var(--muted); font-size: .95rem; }
-  .here { display: block; font: 400 .5rem var(--pixel); color: var(--pink); margin-top: .5rem; }
+/* Filters */
+body:not(.game) .tabs { justify-content: flex-start; margin-bottom: 1rem; }
+body:not(.game) .tabs button { font: 500 .88rem var(--body); padding: .35rem .9rem; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--text); }
+body:not(.game) .tabs button:hover { border-color: var(--ink); }
+body:not(.game) .tabs button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
 
-  /* ---------- Continue screen ---------- */
-  .continue { text-align: center; }
-  .continue .count { font: 400 3rem var(--pixel); color: var(--pink); margin: 0 0 1rem; }
-  .contact { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
-  .contact a {
-    font: 400 .7rem var(--pixel); text-decoration: none; padding: 1rem 1.2rem;
-    background: var(--panel); color: var(--text); border: 3px solid var(--cyan); box-shadow: 4px 4px 0 var(--pink);
-  }
-  .contact a:hover { background: var(--cyan); color: var(--bg); }
-  footer { text-align: center; color: var(--muted); padding: 2rem 1rem 3rem; font-size: .9rem; }
-  footer kbd { font-family: var(--pixel); font-size: .55rem; color: var(--yellow); }
+/* Projects */
+body:not(.game) .quests { gap: 0; border-top: 1px solid var(--line); }
+body:not(.game) .quest { border-bottom: 1px solid var(--line); transition: background .2s; }
+body:not(.game) .quest:hover { background: var(--soft); }
+body:not(.game) .quest-head { padding: 1.4rem .75rem; align-items: baseline; }
+body:not(.game) .quest-title { font: 700 1.3rem/1.25 var(--head); font-stretch: 90%; color: var(--ink); }
+body:not(.game) .quest-desc { color: var(--muted); max-width: 40rem; }
+body:not(.game) .badge { font: 500 .8rem var(--body); padding: .2rem .7rem; border-radius: 999px; border: 1px solid; }
+body:not(.game) [data-status="complete"] .badge, body:not(.game) [data-status="earned"] .badge { color: #1F7A45; border-color: #BFE3CC; background: #EEF8F1; }
+body:not(.game) [data-status="active"] .badge, body:not(.game) [data-status="progress"] .badge { color: #6B5500; border-color: #F0D878; background: #FFF7D1; }
+body:not(.game) [data-status="locked"] .badge, body:not(.game) [data-status="planned"] .badge { color: var(--muted); border-color: var(--line); background: transparent; }
+body:not(.game) .chev { color: var(--muted); }
+body:not(.game) .quest-body { padding: 0 .75rem 1.5rem; }
+body:not(.game) .sub { font-size: .82rem; font-weight: 600; color: var(--muted); margin: 1rem 0 .4rem; }
+body:not(.game) .objectives li::before { border: 1.5px solid var(--plan); border-radius: 3px; }
+body:not(.game) .objectives li.done { color: var(--muted); }
+body:not(.game) .objectives li.done::before { background: var(--ink); border-color: var(--ink); }
+body:not(.game) .objectives li.done::after { content: "\2713"; position: absolute; left: 3px; top: .27rem; color: #fff; font-size: .66rem; font-weight: 700; }
+body:not(.game) .rewards li { font-size: .85rem; background: var(--soft); border-radius: 4px; color: var(--text); }
+body:not(.game) .quest:hover .rewards li { background: #fff; }
+body:not(.game) .writeup { font-weight: 600; color: var(--red); }
 
-  /* ---------- Achievement toast ---------- */
-  .toast {
-    position: fixed; right: 1rem; bottom: 1rem; z-index: 50; max-width: 320px;
-    background: var(--bg); border: 3px solid var(--yellow); box-shadow: 5px 5px 0 var(--pink);
-    padding: .9rem 1rem; transform: translateY(160%); transition: transform .35s steps(6);
-  }
-  .toast.show { transform: translateY(0); }
-  .toast small { display: block; font: 400 .55rem var(--pixel); color: var(--yellow); margin-bottom: .4rem; }
-  .confetti { position: fixed; top: -12px; width: 10px; height: 10px; z-index: 40; pointer-events: none; animation: fall linear forwards; }
-  @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+/* Certifications */
+body:not(.game) .trophies { grid-template-columns: 1fr; gap: 0; border-top: 1px solid var(--line); }
+body:not(.game) .trophy { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 1rem; padding: 1.25rem .75rem; border-bottom: 1px solid var(--line); }
+body:not(.game) .trophy-icon { display: none; }
+body:not(.game) .trophy h3 { grid-column: 1; font: 700 1.25rem var(--head); font-stretch: 90%; color: var(--ink); }
+body:not(.game) .trophy .issuer { grid-column: 1; margin: 0; color: var(--muted); }
+body:not(.game) .trophy .badge { grid-column: 2; grid-row: 1 / span 2; }
+body:not(.game) .trophy a { grid-column: 1; margin-top: .4rem; color: var(--red); font-weight: 600; }
 
-  /* ---------- Trophy case ---------- */
-  .trophies { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.25rem; }
-  .trophy {
-    background: var(--panel); border: 3px solid var(--yellow);
-    box-shadow: 6px 6px 0 var(--pink); padding: 1.25rem;
-  }
-  .trophy[data-status="progress"] { border-color: var(--cyan); }
-  .trophy[data-status="planned"] { border: 3px dashed var(--muted); box-shadow: 6px 6px 0 var(--panel-2); }
-  .trophy-icon { font: 400 1.6rem var(--pixel); color: var(--yellow); margin: 0 0 .75rem; }
-  .trophy[data-status="progress"] .trophy-icon { color: var(--cyan); }
-  .trophy[data-status="planned"] .trophy-icon { color: var(--muted); }
-  .trophy h3 { margin: 0; font-size: 1.2rem; }
-  .trophy p { margin: .25rem 0 0; color: var(--muted); }
-  .trophy .state { font: 400 .55rem var(--pixel); color: var(--yellow); margin-top: .9rem; }
-  .trophy[data-status="progress"] .state { color: var(--cyan); }
-  .trophy a { display: inline-block; margin-top: .75rem; font-weight: 600; }
-  
-  @media (max-width: 760px) {
-    .sheet { grid-template-columns: 1fr; }
-    .avatar { max-width: 240px; margin: 0 auto; }
-    .map { grid-template-columns: 1fr; gap: 1.5rem; }
-    .map::before { top: 0; bottom: 0; left: 36px; right: auto; width: 6px; height: auto;
-      background: repeating-linear-gradient(180deg, var(--yellow) 0 12px, transparent 12px 20px); }
-    .stage { display: grid; grid-template-columns: 76px 1fr; gap: 1rem; text-align: left; align-items: center; }
-    .node { margin: 0; }
-    .quest-head { padding: 1rem; }
-    .inventory { grid-template-columns: repeat(4, 1fr); gap: .5rem; }
-    .item { font-size: .55rem; }
-    .panel { padding: 1rem; }
-    .quest-body { padding: 0 1rem 1.25rem; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation: none !important; transition: none !important; }
-    html { scroll-behavior: auto; }
-  }
+/* Skills */
+body:not(.game) .skill-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+body:not(.game) .skill-groups h3 { font: 700 1rem var(--head); color: var(--ink); margin: 0 0 .5rem; padding-bottom: .5rem; border-bottom: 2px solid var(--ink); }
+body:not(.game) .skill-groups ul { list-style: none; margin: 0; padding: 0; }
+body:not(.game) .skill-groups li { padding: .5rem 0; border-bottom: 1px solid var(--line); }
+body:not(.game) .skill-groups b { display: block; font-weight: 600; color: var(--ink); font-size: .97rem; }
+body:not(.game) .skill-groups span { color: var(--muted); font-size: .86rem; }
+
+/* Experience and education */
+body:not(.game) .history h3 { font-size: .85rem; font-weight: 600; color: var(--muted); margin: 0 0 .5rem; }
+body:not(.game) .history h3 + .row { border-top: 1px solid var(--line); }
+body:not(.game) .history .row + h3 { margin-top: 2.25rem; }
+body:not(.game) .row { display: grid; grid-template-columns: 11rem 1fr; gap: 1.5rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+body:not(.game) .when { color: var(--muted); font-size: .92rem; padding-top: .2rem; }
+body:not(.game) .row strong { display: block; font: 700 1.15rem var(--head); font-stretch: 90%; color: var(--ink); }
+body:not(.game) .row span { color: var(--text); }
+
+/* Contact */
+body:not(.game) .continue { text-align: left; }
+body:not(.game) .continue p { color: var(--text); margin: 0; }
+body:not(.game) .big-email { display: inline-block; font: 800 clamp(1.5rem, 3.2vw, 2.3rem)/1.15 var(--head); font-stretch: 88%; color: var(--ink); text-decoration: none; border-bottom: 3px solid var(--red); margin: 1rem 0 1.5rem; overflow-wrap: anywhere; transition: color .15s; }
+body:not(.game) .big-email:hover { color: var(--red); }
+body:not(.game) .contact { justify-content: flex-start; margin-top: 0; }
+body:not(.game) footer { max-width: 76rem; margin: 0 auto; padding: 2rem; text-align: left; color: var(--muted); border-top: 1px solid var(--line); font-size: .85rem; }
+
+/* =====================================================
+   GAME MODE
+   ===================================================== */
+body.game {
+  --bg: #0F0F0F; --paper: #1C1C1C; --panel-2: #2F2F2F; --ink: #F5F5F5; --muted: #B5B5B5;
+  --cyan: #F5F5F5; --pink: #E63946; --yellow: #FFD23F; --green: #FFD23F;
+  --pixel: "Press Start 2P", "Courier New", monospace;
+  font-family: "Chakra Petch", system-ui, sans-serif;
+  animation: crt .45s steps(4);
+}
+@keyframes crt { 0% { filter: brightness(3) saturate(0); } 100% { filter: none; } }
+body.game #stars { display: block; position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; }
+body.game a { color: var(--cyan); }
+body.game a:focus-visible, body.game button:focus-visible { outline-color: var(--yellow); }
+
+body.game .topbar { background: rgba(15,15,15,.94); border-bottom: 3px solid var(--cyan); }
+body.game .brand { font: 400 .75rem var(--pixel); color: var(--yellow); }
+body.game .nav a { font: 400 .6rem var(--pixel); color: var(--ink); }
+body.game .nav a:hover { color: var(--yellow); }
+body.game .toggle { font: 400 .6rem var(--pixel); border-radius: 0; border: 3px solid var(--pink); background: var(--pink); color: var(--ink); box-shadow: 3px 3px 0 var(--cyan); }
+
+body.game .hero { min-height: 88vh; display: grid; place-items: center; text-align: center; }
+body.game .hero h1 { font: 400 clamp(1.8rem, 7vw, 4.2rem)/1.3 var(--pixel); letter-spacing: 0; color: var(--cyan); text-shadow: 4px 4px 0 var(--pink), 8px 8px 0 #000; animation: float 3s ease-in-out infinite; }
+body.game .subtitle { font: 400 clamp(.7rem, 2vw, 1rem)/1.8 var(--pixel); color: var(--yellow); margin-top: 1.5rem; }
+body.game .tagline { margin: 0 auto 2.5rem; }
+body.game .actions { justify-content: center; }
+.start { font: 400 1rem var(--pixel); cursor: pointer; background: var(--pink); color: var(--ink); border: 0; padding: 1.1rem 1.6rem; box-shadow: 5px 5px 0 var(--cyan); animation: blink 1.1s steps(2, start) infinite; }
+.start:hover { animation: none; }
+@keyframes float { 50% { transform: translateY(-10px); } }
+@keyframes blink { to { visibility: hidden; } }
+
+body.game h2 { font: 400 clamp(1rem, 2.6vw, 1.4rem)/1.5 var(--pixel); color: var(--yellow); text-shadow: 3px 3px 0 var(--pink); letter-spacing: 0; }
+body.game .panel { border-radius: 0; border: 3px solid var(--cyan); box-shadow: 6px 6px 0 var(--pink); }
+
+body.game .sheet { grid-template-columns: 220px 1fr; gap: 2rem; }
+body.game .avatar { display: block; background: var(--panel-2); border: 3px solid var(--yellow); padding: 1rem; text-align: center; }
+.avatar svg { width: 100%; max-width: 180px; animation: bob 1.6s steps(2) infinite; }
+.avatar p { font: 400 .6rem var(--pixel); color: var(--yellow); margin: .75rem 0 0; }
+@keyframes bob { 50% { transform: translateY(-4px); } }
+body.game .stats dt { font: 400 .6rem var(--pixel); color: var(--pink); }
+body.game .bio { color: var(--muted); font-size: 1.05rem; }
+body.game .xp-wrap { display: block; margin-top: 1.5rem; }
+.xp-label { display: flex; justify-content: space-between; font: 400 .65rem var(--pixel); margin-bottom: .5rem; }
+.xp-label span:last-child { color: var(--green); }
+.xp { height: 26px; border: 3px solid var(--ink); background: #000000; padding: 3px; }
+.xp-fill { height: 100%; width: 0; transition: width 1.6s steps(20); background: repeating-linear-gradient(90deg, var(--green) 0 14px, #D9AE1C 14px 18px); }
+
+body.game .tabs button { font: 400 .6rem var(--pixel); border-radius: 0; padding: .8rem 1rem; border: 3px solid var(--panel-2); }
+body.game .tabs button[aria-pressed="true"] { background: var(--yellow); color: var(--bg); border-color: var(--yellow); }
+
+body.game .quest { border-radius: 0; border: 3px solid var(--cyan); box-shadow: 6px 6px 0 var(--pink); }
+body.game .quest[data-status="complete"] { border-color: var(--green); box-shadow: 6px 6px 0 var(--cyan); }
+body.game .quest[data-status="locked"] { border: 3px dashed var(--muted); box-shadow: 6px 6px 0 var(--panel-2); }
+.quest-type { font: 400 .55rem var(--pixel); color: var(--pink); margin-bottom: .5rem; }
+body.game .quest-title { font: 700 1.3rem "Chakra Petch", sans-serif; }
+body.game .badge { font: 400 .55rem var(--pixel); border-radius: 0; padding: .5rem .6rem; }
+body.game [data-status="active"] .badge, body.game [data-status="progress"] .badge { background: var(--cyan); color: var(--bg); }
+body.game [data-status="complete"] .badge, body.game [data-status="earned"] .badge { background: var(--green); color: var(--bg); }
+body.game [data-status="locked"] .badge, body.game [data-status="planned"] .badge { background: var(--panel-2); color: var(--ink); }
+body.game .chev { font-family: var(--pixel); color: var(--yellow); }
+body.game .quest-body > p.g { color: var(--muted); margin: 0 0 1rem; }
+body.game .sub { font: 400 .6rem var(--pixel); color: var(--yellow); }
+body.game .objectives li::before { border-radius: 0; border-color: var(--ink); }
+body.game .objectives li.done { text-decoration: line-through; }
+body.game .objectives li.done::before { background: var(--green); border-color: var(--green); }
+body.game .rewards li { background: var(--panel-2); color: var(--ink); border: 2px solid var(--yellow); border-radius: 0; }
+body.game .writeup { font: 400 .65rem var(--pixel); background: var(--pink); color: var(--ink); text-decoration: none; padding: .8rem 1rem; box-shadow: 4px 4px 0 var(--cyan); }
+
+body.game .trophy { border-radius: 0; border: 3px solid var(--yellow); box-shadow: 6px 6px 0 var(--pink); }
+body.game .trophy[data-status="progress"] { border-color: var(--cyan); }
+body.game .trophy[data-status="planned"] { border: 3px dashed var(--muted); box-shadow: 6px 6px 0 var(--panel-2); }
+body.game .trophy-icon { display: block; font: 400 1.6rem var(--pixel); color: var(--yellow); margin: 0 0 .75rem; }
+body.game .trophy[data-status="progress"] .trophy-icon { color: var(--cyan); }
+body.game .trophy h3 { font: 700 1.2rem "Chakra Petch", sans-serif; }
+
+body.game .inventory { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: .75rem; }
+body.game .item { aspect-ratio: 1; border-radius: 0; border: 3px solid var(--panel-2); background: var(--panel-2); color: var(--ink); font: 400 .65rem var(--pixel); display: grid; place-items: center; padding: .3rem; }
+body.game .item:hover, body.game .item[aria-pressed="true"] { border-color: var(--yellow); background: var(--paper); }
+body.game .item-info { border-top: 3px dashed var(--panel-2); }
+body.game .item-info strong { color: var(--yellow); }
+
+body.game .map { display: flex; flex-direction: row-reverse; gap: 1rem; border: 0; padding: 0; position: relative; }
+body.game .map::before { content: ""; position: absolute; top: 38px; left: 12%; right: 12%; height: 6px; background: repeating-linear-gradient(90deg, var(--yellow) 0 12px, transparent 12px 20px); }
+body.game .stage { flex: 1; text-align: center; padding: 0; }
+body.game .stage::before { display: none; }
+body.game .node { display: grid; place-items: center; width: 76px; height: 76px; margin: 0 auto 1rem; background: var(--paper); border: 4px solid var(--green); color: var(--green); font: 400 .7rem var(--pixel); position: relative; }
+body.game .stage.current .node { border-color: var(--pink); color: var(--pink); animation: pulse 1.2s steps(2) infinite; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 6px var(--pink); } }
+.here { font: 400 .5rem var(--pixel); color: var(--pink); margin-top: .5rem; }
+
+body.game .continue { text-align: center; }
+.count { font: 400 3rem var(--pixel); color: var(--pink); margin: 0 0 1rem; }
+body.game .contact { justify-content: center; }
+body.game .contact .btn { font: 400 .65rem var(--pixel); border-radius: 0; background: var(--paper); color: var(--ink); border: 3px solid var(--cyan); box-shadow: 4px 4px 0 var(--pink); }
+body.game footer { text-align: center; }
+kbd { font-family: var(--pixel); font-size: .55rem; color: var(--yellow); }
+
+body.game .toast { display: block; position: fixed; right: 1rem; bottom: 1rem; z-index: 50; max-width: 320px; background: var(--bg); border: 3px solid var(--yellow); box-shadow: 5px 5px 0 var(--pink); padding: .9rem 1rem; transform: translateY(170%); transition: transform .35s steps(6); }
+body.game .toast.show { transform: translateY(0); }
+.toast small { display: block; font: 400 .55rem var(--pixel); color: var(--yellow); margin-bottom: .4rem; }
+.confetti { position: fixed; top: -12px; width: 10px; height: 10px; z-index: 40; pointer-events: none; animation: fall linear forwards; }
+@keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+
+
+/* Game mode backgrounds for shared elements */
+body.game { background: var(--bg); --text: #F5F5F5; color: var(--text); }
+body.game .quest, body.game .trophy, body.game .panel { background: var(--paper); }
+body.game .tabs button { background: var(--paper); color: var(--ink); }
+body.game .tagline { color: var(--muted); }
+body.game .rewards li { font-size: .95rem; }
+
+/* =====================================================
+   MOBILE + REDUCED MOTION
+   ===================================================== */
+@media (max-width: 960px) {
+  .nav a { display: none; }
+  .quest-head { flex-direction: column; }
+  body:not(.game) .topbar .wrap { padding-left: 1.25rem; padding-right: 1.25rem; }
+  body:not(.game) main { display: block; padding: 0 1.25rem; }
+  body:not(.game) .hero { position: static; padding: 2.5rem 0 1.5rem; border-bottom: 1px solid var(--line); }
+  body:not(.game) .photo { max-width: 10rem; }
+  body:not(.game) main > section { padding: 2.75rem 0; }
+  body:not(.game) .quest-head { gap: .6rem; }
+  body:not(.game) .row { grid-template-columns: 1fr; gap: .15rem; }
+  body:not(.game) footer { padding: 2rem 1.25rem; }
+}
+@media (max-width: 760px) {
+  .panel { padding: 1.25rem; }
+  body.game .sheet { grid-template-columns: 1fr; }
+  body.game .avatar { max-width: 240px; margin: 0 auto; }
+  body.game .inventory { grid-template-columns: repeat(4, 1fr); gap: .5rem; }
+  body.game .item { font-size: .5rem; }
+  body.game .quest-head { padding: 1.2rem; }
+  body.game .quest-body { padding: 0 1.2rem 1.2rem; }
+  body.game .map { flex-direction: column-reverse; gap: 1.5rem; }
+  body.game .map::before { top: 0; bottom: 0; left: 36px; right: auto; width: 6px; height: auto; background: repeating-linear-gradient(180deg, var(--yellow) 0 12px, transparent 12px 20px); }
+  body.game .stage { display: grid; grid-template-columns: 76px 1fr; gap: 1rem; text-align: left; align-items: center; }
+  body.game .node { margin: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}
 </style>
 </head>
 <body>
 <canvas id="stars" aria-hidden="true"></canvas>
 
-<!-- TITLE SCREEN -->
-<header class="title-screen">
-  <div>
-    <h1 class="logo">JONAS<br>MARTIN</h1>
-    <p class="subtitle">Tech Quest</p>
-    <p class="tagline">IT student and career changer leveling up across tech: systems, web, data, design, and security.</p>
-    <button class="start" id="start" type="button">PRESS START</button>
-    <nav class="menu" aria-label="Main">
-      <a href="#player">Player</a>
-      <a href="#quests">Quests</a>
-      <a href="#trophies">Trophies</a>
-      <a href="#inventory">Inventory</a>
-      <a href="#map">World map</a>
+<div class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="p">Jonas Martin</span><span class="g">JM</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#about"><span class="p">About</span><span class="g">Player</span></a>
+      <a href="#projects"><span class="p">Projects</span><span class="g">Quests</span></a>
+      <a href="#certs"><span class="p">Certifications</span><span class="g">Trophies</span></a>
+      <a href="#skills"><span class="p">Skills</span><span class="g">Inventory</span></a>
+      <a href="#experience"><span class="p">Experience</span><span class="g">Map</span></a>
       <!-- Put your resume in the repo as resume.pdf -->
       <a href="resume.pdf" id="resume-link">Resume</a>
+      <button class="toggle" id="mode-toggle" type="button" aria-pressed="false">
+        <span class="p">&#127918; Game mode</span><span class="g">EXIT GAME</span>
+      </button>
     </nav>
   </div>
-</header>
+</div>
 
-<main>
-  <!-- PLAYER / CHARACTER SHEET -->
-  <section id="player">
+<main id="top">
+  <!-- PROFILE (sticky sidebar) / TITLE SCREEN -->
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <h1><span class="p">Jonas Martin</span><span class="g">JONAS<br>MARTIN</span></h1>
+        <p class="subtitle"><span class="p">IT student and career changer</span><span class="g">TECH QUEST</span></p>
+        <p class="tagline"><span class="p">I bring over ten years of customer-facing operations experience to tech. I'm finishing a B.S. in Information Technology at NC A&amp;T and building hands-on projects in systems, web, data and security.</span><span class="g">IT student and career changer leveling up across tech: systems, web, data, design and security.</span></p>
+        <p class="status p"><span class="dot" aria-hidden="true"></span>Open to tech roles. Based in North Carolina and open to relocation.</p>
+        <div class="actions">
+          <a class="btn primary p" href="resume.pdf">Download resume</a>
+          <a class="btn secondary p" href="#projects">View projects</a>
+          <button class="start g" id="start" type="button">PRESS START</button>
+        </div>
+        <ul class="links p">
+          <li><span>Email</span><a href="mailto:jonasmartinit@gmail.com">jonasmartinit@gmail.com</a></li>
+          <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/jonas-martin-704355429">jonas-martin</a></li>
+          <li><span>GitHub</span><a href="https://github.com/JonasMartinIT">JonasMartinIT</a></li>
+        </ul>
+        <p class="hint p">Want the fun version? Try <button type="button" id="hint-toggle">game mode</button>.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ABOUT / PLAYER -->
+  <section id="about">
     <div class="wrap">
-      <h2>Player 1</h2>
+      <h2><span class="p">About</span><span class="g">PLAYER 1</span></h2>
       <div class="panel sheet">
         <div class="avatar">
-          <!-- Pixel avatar: a monitor wearing a support headset -->
           <svg viewBox="0 0 16 16" shape-rendering="crispEdges" role="img" aria-label="Pixel art monitor wearing a headset">
-            <rect x="3" y="1" width="10" height="1" fill="#FF4FA3"/>
-            <rect x="2" y="2" width="1" height="2" fill="#FF4FA3"/>
-            <rect x="13" y="2" width="1" height="2" fill="#FF4FA3"/>
-            <rect x="2" y="3" width="12" height="9" fill="#22E4FF"/>
-            <rect x="3" y="4" width="10" height="7" fill="#140B2E"/>
-            <rect x="1" y="4" width="2" height="3" fill="#FF4FA3"/>
-            <rect x="13" y="4" width="2" height="3" fill="#FF4FA3"/>
-            <rect x="12" y="7" width="1" height="2" fill="#FF4FA3"/>
-            <rect x="11" y="9" width="1" height="1" fill="#FF4FA3"/>
-            <rect x="5" y="6" width="1" height="2" fill="#FFD93D"/>
-            <rect x="10" y="6" width="1" height="2" fill="#FFD93D"/>
-            <rect x="5" y="9" width="1" height="1" fill="#4DFF88"/>
-            <rect x="6" y="10" width="4" height="1" fill="#4DFF88"/>
-            <rect x="10" y="9" width="1" height="1" fill="#4DFF88"/>
-            <rect x="7" y="12" width="2" height="2" fill="#C3B8EC"/>
-            <rect x="5" y="14" width="6" height="1" fill="#C3B8EC"/>
+            <rect x="3" y="1" width="10" height="1" fill="#E63946"/><rect x="2" y="2" width="1" height="2" fill="#E63946"/><rect x="13" y="2" width="1" height="2" fill="#E63946"/>
+            <rect x="2" y="3" width="12" height="9" fill="#F5F5F5"/><rect x="3" y="4" width="10" height="7" fill="#0F0F0F"/>
+            <rect x="1" y="4" width="2" height="3" fill="#E63946"/><rect x="13" y="4" width="2" height="3" fill="#E63946"/>
+            <rect x="12" y="7" width="1" height="2" fill="#E63946"/><rect x="11" y="9" width="1" height="1" fill="#E63946"/>
+            <rect x="5" y="6" width="1" height="2" fill="#FFD23F"/><rect x="10" y="6" width="1" height="2" fill="#FFD23F"/>
+            <rect x="5" y="9" width="1" height="1" fill="#FFD23F"/><rect x="6" y="10" width="4" height="1" fill="#FFD23F"/><rect x="10" y="9" width="1" height="1" fill="#FFD23F"/>
+            <rect x="7" y="12" width="2" height="2" fill="#B5B5B5"/><rect x="5" y="14" width="6" height="1" fill="#B5B5B5"/>
           </svg>
           <p>LV <span id="level">1</span></p>
         </div>
         <div>
           <dl class="stats">
-            <div><dt>CLASS</dt><dd>Multiclass Technologist</dd></div>
-            <div><dt>HOME BASE</dt><dd>North Carolina (Open To Relocation)</dd></div>
-            <div><dt>GUILD</dt><dd>NC A&amp;T, B.S. Information Technology</dd></div>
-            <div><dt>NEXT LEVEL</dt><dd>Graduation, May 2027</dd></div>
+            <div class="g"><dt>CLASS</dt><dd>Multiclass technologist</dd></div>
+            <div><dt><span class="p">Current role</span><span class="g">DAY JOB</span></dt><dd>Administrative Support Specialist, UNC-Chapel Hill</dd></div>
+            <div><dt><span class="p">Education</span><span class="g">GUILD</span></dt><dd>B.S. Information Technology, NC A&amp;T</dd></div>
+            <div><dt><span class="p">Graduation</span><span class="g">NEXT LEVEL</span></dt><dd>May 2027</dd></div>
+            <div class="p"><dt>Focus areas</dt><dd>Systems, web, data, design and security</dd></div>
+            <div class="g"><dt>HOME BASE</dt><dd>North Carolina (open to relocation)</dd></div>
           </dl>
-          <div class="xp-label"><span>QUEST XP</span><span id="xp-text">0 / 0</span></div>
-          <div class="xp" role="progressbar" aria-label="Quest objectives completed" id="xp-bar" aria-valuemin="0">
-            <div class="xp-fill" id="xp-fill"></div>
+          <!-- Your bio -->
+          <p class="bio">With over a decade in customer-facing operations, I've handled frustrated customers, messy problems and busy days without dropping the ball. Now I'm stacking technical skills on top of that, from systems and scripting to web design and databases.<span class="g"> XP fills as I complete quest objectives below.</span></p>
+          <div class="strengths p">
+            <p>What I bring from operations</p>
+            <ul><li>Clear communication</li><li>Calm under pressure</li><li>Follow-through</li><li>Customer focus</li></ul>
           </div>
-          <p class="bio">With over a decade in customer-facing operations, I've handled frustrated customers, messy problems and busy days without dropping the ball. Now I'm stacking technical skills on top of that, from systems and scripting to web design and databases. XP fills as I complete quest objectives below.</p>
+          <div class="xp-wrap">
+            <div class="xp-label"><span>QUEST XP</span><span id="xp-text">0 / 0</span></div>
+            <div class="xp" role="progressbar" aria-label="Project milestones completed" id="xp-bar" aria-valuemin="0"><div class="xp-fill" id="xp-fill"></div></div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- QUEST LOG -->
-  <section id="quests">
+  <!-- PROJECTS / QUESTS -->
+  <section id="projects">
     <div class="wrap">
-      <h2>Quest log</h2>
-      <div class="tabs" role="group" aria-label="Filter quests">
-        <button type="button" data-filter="all" aria-pressed="true">ALL</button>
-        <button type="button" data-filter="active" aria-pressed="false">ACTIVE</button>
-        <button type="button" data-filter="complete" aria-pressed="false">COMPLETE</button>
-        <button type="button" data-filter="locked" aria-pressed="false">LOCKED</button>
+      <h2><span class="p">Projects</span><span class="g">QUEST LOG</span></h2>
+      <p class="intro p">Coursework, labs and personal projects. Select a project for milestones, skills used and the full write-up.</p>
+      <div class="tabs" role="group" aria-label="Filter projects">
+        <button type="button" data-filter="all" aria-pressed="true"><span class="p">All</span><span class="g">ALL</span></button>
+        <button type="button" data-filter="complete" aria-pressed="false"><span class="p">Complete</span><span class="g">COMPLETE</span></button>
+        <button type="button" data-filter="active" aria-pressed="false"><span class="p">In progress</span><span class="g">ACTIVE</span></button>
+        <button type="button" data-filter="locked" aria-pressed="false"><span class="p">Planned</span><span class="g">LOCKED</span></button>
       </div>
       <div class="quests" id="quest-list"></div>
     </div>
   </section>
 
-    <!-- TROPHY CASE (certifications) -->
-  <section id="trophies">
+  <!-- CERTIFICATIONS / TROPHIES -->
+  <section id="certs">
     <div class="wrap">
-      <h2>Trophy case</h2>
-      <div class="trophies">
-        <!-- data-status: "earned", "progress" or "planned" -->
-        <article class="trophy" data-status="progress">
-          <p class="trophy-icon" aria-hidden="true">&#9733;</p>
-          <h3>Security+</h3>
-          <p>CompTIA</p>
-          <p class="state">IN PROGRESS</p>
-        </article>
-
-        <!-- When you pass one, switch to this format:
-        <article class="trophy" data-status="earned">
-          <p class="trophy-icon" aria-hidden="true">&#9733;</p>
-          <h3>Security+</h3>
-          <p>CompTIA</p>
-          <p class="state">EARNED MONTH YEAR</p>
-          <a href="YOUR-CREDLY-LINK">Verify badge</a>
-        </article>
-        -->
-      </div>
+      <h2><span class="p">Certifications</span><span class="g">TROPHY CASE</span></h2>
+      <div class="trophies" id="cert-list"></div>
     </div>
   </section>
 
-  <!-- INVENTORY -->
-  <section id="inventory">
+  <!-- SKILLS / INVENTORY -->
+  <section id="skills">
     <div class="wrap">
-      <h2>Inventory</h2>
-      <div class="panel">
+      <h2><span class="p">Skills and tools</span><span class="g">INVENTORY</span></h2>
+      <div class="skill-groups p" id="skill-groups"></div>
+      <div class="panel g">
         <div class="inventory" id="items"></div>
-        <div class="item-info" id="item-info" aria-live="polite">
-          <strong>Select an item</strong><span>Tap any tool to see what I use it for.</span>
-        </div>
+        <div class="item-info" id="item-info" aria-live="polite"><strong>Select a tool</strong><span>Click any tool to see what I use it for.</span></div>
       </div>
     </div>
   </section>
 
-  <!-- WORLD MAP -->
-  <section id="map">
+  <!-- EXPERIENCE / WORLD MAP -->
+  <section id="experience">
     <div class="wrap">
-      <h2>World map</h2>
-      <ol class="map">
-        <li class="stage cleared"><div class="node">1-1</div><div><strong>Leasing Consultant</strong><span>Ticon Properties, 4+ years</span></div></li>
-        <li class="stage cleared"><div class="node">1-2</div><div><strong>Administrative Support Specialist</strong><span>UNC-Chapel Hill, 2020 to now</span></div></li>
-        <li class="stage cleared"><div class="node">2-1</div><div><strong>Associate in Science</strong><span>Durham Tech, May 2024</span></div></li>
-        <li class="stage current"><div class="node">2-2</div><div><strong>B.S. Information Technology</strong><span>NC A&amp;T, May 2027</span><span class="here">YOU ARE HERE</span></div></li>
-      </ol>
+      <h2><span class="p">Experience and education</span><span class="g">WORLD MAP</span></h2>
+      <div class="history p">
+        <h3>Experience</h3>
+        <div class="row"><span class="when">2020 to present</span><div><strong>Administrative Support Specialist</strong><span>UNC-Chapel Hill</span></div></div>
+        <div class="row"><span class="when">4+ years, before 2020</span><div><strong>Leasing Consultant</strong><span>Ticon Properties</span></div></div>
+        <h3>Education</h3>
+        <div class="row"><span class="when">Expected May 2027</span><div><strong>B.S. Information Technology</strong><span>North Carolina A&amp;T State University</span></div></div>
+        <div class="row"><span class="when">May 2024</span><div><strong>Associate in Science</strong><span>Durham Technical Community College</span></div></div>
+      </div>
+      <div class="g">
+        <ol class="map">
+          <li class="stage current"><div class="node">2-2</div><div><strong>B.S. Information Technology</strong><span>NC A&amp;T, expected May 2027</span><span class="here">YOU ARE HERE</span></div></li>
+          <li class="stage"><div class="node">2-1</div><div><strong>Associate in Science</strong><span>Durham Technical Community College, May 2024</span></div></li>
+          <li class="stage"><div class="node">1-2</div><div><strong>Administrative Support Specialist</strong><span>UNC-Chapel Hill, 2020 to present</span></div></li>
+          <li class="stage"><div class="node">1-1</div><div><strong>Leasing Consultant</strong><span>Ticon Properties, 4+ years</span></div></li>
+        </ol>
+      </div>
     </div>
   </section>
 
-  <!-- CONTINUE / CONTACT -->
+  <!-- CONTACT -->
   <section id="contact">
-    <div class="wrap panel continue">
-      <h2>Continue?</h2>
-      <p class="count" id="count" aria-hidden="true">9</p>
-      <p>Hiring for a tech role or have a project in mind? Let's talk.</p>
+    <div class="wrap"><div class="panel continue">
+      <h2><span class="p">Get in touch</span><span class="g">CONTINUE?</span></h2>
+      <p class="count g" id="count" aria-hidden="true">9</p>
+      <p>Hiring for a tech role or have a project in mind? I'd like to hear about it.</p>
+      <a class="big-email p" href="mailto:jonasmartinit@gmail.com">jonasmartinit@gmail.com</a>
       <div class="contact">
-        <!-- Replace these with your real links -->
-        <a href="mailto:jonasmartinit@gmail.com">EMAIL</a>
-        <a href="https://www.linkedin.com/in/jonas-martin-704355429">LINKEDIN</a>
-        <a href="https://github.com/YOUR-USERNAME">GITHUB</a>
+        <a class="btn primary g" href="mailto:jonasmartinit@gmail.com">Email me</a>
+        <a class="btn secondary" href="https://www.linkedin.com/in/jonas-martin-704355429">LinkedIn</a>
+        <a class="btn secondary" href="https://github.com/JonasMartinIT">GitHub</a>
+        <a class="btn secondary p" href="resume.pdf">Resume</a>
       </div>
-    </div>
+    </div></div>
   </section>
 </main>
 
-<footer>Built by Jonas Martin, hosted on GitHub Pages. Psst: <kbd>&uarr; &uarr; &darr; &darr; &larr; &rarr; &larr; &rarr; B A</kbd></footer>
+<footer>
+  <span class="p">&copy; 2026 Jonas Martin. Hand-coded and hosted on GitHub Pages.</span>
+  <span class="g">Built by Jonas Martin. Psst: <kbd>&uarr; &uarr; &darr; &darr; &larr; &rarr; &larr; &rarr; B A</kbd></span>
+</footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"><small>ACHIEVEMENT UNLOCKED</small><span id="toast-text"></span></div>
 
 <script>
 /* =========================================================
-   EDIT YOUR QUESTS HERE
-   status: "active", "complete" or "locked" (locked = planned)
-   Set done: true on an objective when you finish it.
-   XP and level update automatically.
+   EDIT YOUR PROJECTS, CERTIFICATIONS AND SKILLS BELOW
    ========================================================= */
 const QUESTS = [
   {
-    title: "Smart Lock and Access Log System",
-    type: "MAIN QUEST",
-    status: "active",
+    title: "Smart Lock and Access Log System", type: "MAIN QUEST", status: "active",
     desc: "Senior capstone. An RFID access control system that logs every entry attempt for auditing. I'm the web panel and documentation lead on a three-person team.",
     objectives: [
       { text: "Write the team project proposal", done: true },
@@ -403,37 +537,32 @@ const QUESTS = [
       { text: "Write the final system documentation", done: false }
     ],
     rewards: ["Web development", "Access control", "Technical writing", "Teamwork"],
-    link: "https://github.com/YOUR-USERNAME/smart-lock"
+    link: "https://github.com/JonasMartinIT/smart-lock"
   },
   {
-    title: "Ninth Street Books database",
-    type: "SIDE QUEST",
-    status: "active",
+    title: "Ninth Street Books database", type: "SIDE QUEST", status: "active",
     desc: "A relational database for a bookstore management application built around an independent bookstore.",
     objectives: [
       { text: "Design the relational model", done: true },
       { text: "Normalize the database design", done: false }
     ],
     rewards: ["SQL", "Database design", "Normalization"],
-    link: "https://github.com/YOUR-USERNAME/ninth-street-books"
+    link: "https://github.com/JonasMartinIT/ninth-street-books"
   },
   {
-    title: "Build this portfolio site",
-    type: "SIDE QUEST",
-    status: "complete",
-    desc: "Hand-built with HTML, CSS and JavaScript and deployed on GitHub Pages. No templates or site builders.",
+    title: "Portfolio website", type: "SIDE QUEST", status: "complete",
+    desc: "This site. Hand-coded in HTML, CSS and JavaScript with a professional mode and a hidden game mode, deployed on GitHub Pages.",
     objectives: [
       { text: "Design and code the site", done: true },
+      { text: "Build the game mode toggle", done: true },
       { text: "Deploy on GitHub Pages", done: true }
     ],
     rewards: ["HTML and CSS", "JavaScript", "Git and GitHub"],
-    link: "https://github.com/YOUR-USERNAME/YOUR-USERNAME.github.io"
+    link: "https://github.com/JonasMartinIT/jonasmartinit"
   },
   {
-    title: "Active Directory homelab",
-    type: "MAIN QUEST",
-    status: "locked",
-    desc: "Stand up a Windows domain in VirtualBox and manage it like a real help desk would.",
+    title: "Active Directory homelab", type: "MAIN QUEST", status: "locked",
+    desc: "A Windows domain in VirtualBox for practicing user, group and policy management.",
     objectives: [
       { text: "Install Windows Server and promote a domain controller", done: false },
       { text: "Create users, groups and OUs", done: false },
@@ -441,35 +570,38 @@ const QUESTS = [
       { text: "Join a Windows client to the domain", done: false }
     ],
     rewards: ["Active Directory", "Group Policy", "Virtualization"],
-    link: "https://github.com/YOUR-USERNAME/ad-homelab"
+    link: "https://github.com/JonasMartinIT/ad-homelab"
   },
   {
-    title: "Help desk automation scripts",
-    type: "SIDE QUEST",
-    status: "locked",
-    desc: "PowerShell scripts that handle common tickets faster.",
+    title: "PowerShell automation scripts", type: "SIDE QUEST", status: "locked",
+    desc: "Scripts that automate repetitive admin tasks so they take seconds instead of minutes.",
     objectives: [
       { text: "Bulk user creation from a CSV", done: false },
       { text: "Password reset and account unlock", done: false }
     ],
     rewards: ["PowerShell", "Automation"],
-    link: "https://github.com/YOUR-USERNAME/helpdesk-scripts"
+    link: "https://github.com/JonasMartinIT/powershell-scripts"
   },
   {
-    title: "PC build and repair log",
-    type: "SIDE QUEST",
-    status: "locked",
+    title: "PC build and repair log", type: "SIDE QUEST", status: "locked",
     desc: "Photos, parts lists and troubleshooting notes from hardware builds and repairs.",
     objectives: [
       { text: "Document one full build", done: false },
       { text: "Document one repair from diagnosis to fix", done: false }
     ],
     rewards: ["Hardware", "Troubleshooting"],
-    link: "https://github.com/YOUR-USERNAME/pc-build-log"
+    link: "https://github.com/JonasMartinIT/pc-build-log"
   }
 ];
 
-/* EDIT YOUR INVENTORY HERE */
+/* EDIT YOUR CERTIFICATIONS HERE
+   status: "earned", "progress" or "planned"
+   Add a Credly link once you earn one: link: "https://www.credly.com/..." */
+const CERTS = [
+  { name: "Security+", issuer: "CompTIA", status: "progress", date: "", link: "" }
+];
+
+/* EDIT YOUR SKILLS HERE: [short game label, full name, what you use it for] */
 const ITEMS = [
   ["AD", "Active Directory", "User, group and policy management"],
   ["PS", "PowerShell", "Automating Windows admin tasks"],
@@ -482,44 +614,50 @@ const ITEMS = [
   ["PY", "Python", "Scripting and automation"],
   ["SQL", "SQL", "Querying and designing databases"],
   ["WEB", "HTML and CSS", "Building web pages like this one"],
+  ["JS", "JavaScript", "Interactive features like game mode"],
   ["PHP", "PHP", "Server-side web code"],
   ["JV", "Java", "Object-oriented programming"],
   ["R", "R", "Data analysis"],
   ["XMP", "XAMPP", "Local web server stack"]
 ];
 
-/* ---------- Achievements ---------- */
+/* ---------- Achievements (game mode only) ---------- */
 const unlocked = new Set();
 const toast = document.getElementById('toast');
 let toastTimer;
-function achieve(key, text) {
-  if (unlocked.has(key)) return;
+function achieve(key, text, again) {
+  if (!document.body.classList.contains('game')) return;
+  if (unlocked.has(key) && !again) return;
   unlocked.add(key);
   document.getElementById('toast-text').textContent = text;
   toast.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
 }
+const both = ([p, g]) => `<span class="p">${p}</span><span class="g">${g}</span>`;
 
-/* ---------- Render quests ---------- */
+/* ---------- Projects ---------- */
+const qLabel = { complete: ["Complete", "COMPLETE"], active: ["In progress", "ACTIVE"], locked: ["Planned", "LOCKED"] };
 const list = document.getElementById('quest-list');
-const label = { active: "ACTIVE", complete: "COMPLETE", locked: "LOCKED" };
 QUESTS.forEach((q, i) => {
   const el = document.createElement('article');
-  el.className = 'quest';
-  el.dataset.status = q.status;
+  el.className = 'quest'; el.dataset.status = q.status;
   el.innerHTML = `
     <button class="quest-head" type="button" aria-expanded="false" aria-controls="q${i}">
-      <span><span class="quest-type">${q.type}</span><span class="quest-title">${q.title}</span></span>
-      <span style="display:flex;gap:1rem;align-items:center"><span class="badge">${label[q.status]}</span><span class="chev" aria-hidden="true">&#9654;</span></span>
+      <span>
+        <span class="quest-type g">${q.type}</span>
+        <span class="quest-title">${q.title}</span>
+        <span class="quest-desc p">${q.desc}</span>
+      </span>
+      <span class="head-right"><span class="badge">${both(qLabel[q.status])}</span><span class="chev" aria-hidden="true">&#9654;</span></span>
     </button>
     <div class="quest-body" id="q${i}" hidden>
-      <p>${q.desc}</p>
-      <p class="obj-title">OBJECTIVES</p>
+      <p class="g">${q.desc}</p>
+      <p class="sub">${both(["Milestones", "OBJECTIVES"])}</p>
       <ul class="objectives">${q.objectives.map(o => `<li class="${o.done ? 'done' : ''}">${o.text}</li>`).join('')}</ul>
-      <p class="obj-title">REWARDS</p>
+      <p class="sub">${both(["Skills used", "REWARDS"])}</p>
       <ul class="rewards">${q.rewards.map(r => `<li>${r}</li>`).join('')}</ul>
-      ${q.status === 'locked' ? '' : `<a class="writeup" href="${q.link}">VIEW WRITE-UP</a>`}
+      ${q.status === 'locked' ? '' : `<a class="writeup" href="${q.link}">${both(["Read the write-up", "VIEW WRITE-UP"])}</a>`}
     </div>`;
   const head = el.querySelector('.quest-head');
   head.addEventListener('click', () => {
@@ -530,8 +668,6 @@ QUESTS.forEach((q, i) => {
   });
   list.appendChild(el);
 });
-
-/* Quest filters */
 document.querySelectorAll('.tabs button').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
@@ -540,26 +676,44 @@ document.querySelectorAll('.tabs button').forEach(btn => {
   });
 });
 
-/* ---------- XP and level from real objectives ---------- */
+/* ---------- Certifications ---------- */
+const cLabel = { earned: ["Earned", "EARNED"], progress: ["In progress", "IN PROGRESS"], planned: ["Planned", "LOCKED"] };
+document.getElementById('cert-list').innerHTML = CERTS.map(c => `
+  <article class="trophy" data-status="${c.status}">
+    <p class="trophy-icon" aria-hidden="true"><span class="p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span><span class="g">&#9733;</span></p>
+    <h3>${c.name}</h3>
+    <p class="issuer">${c.issuer}</p>
+    <span class="badge">${both(cLabel[c.status])}${c.date ? ' ' + c.date : ''}</span>
+    ${c.link ? `<a href="${c.link}">${both(["Verify badge", "VERIFY"])}</a>` : ''}
+  </article>`).join('');
+
+/* ---------- XP bar and level (game mode) ---------- */
 const all = QUESTS.flatMap(q => q.objectives);
 const done = all.filter(o => o.done).length;
 document.getElementById('xp-text').textContent = `${done} / ${all.length}`;
 document.getElementById('level').textContent = 1 + Math.floor(done / 3);
 const bar = document.getElementById('xp-bar');
-bar.setAttribute('aria-valuemax', all.length);
-bar.setAttribute('aria-valuenow', done);
-const fill = document.getElementById('xp-fill');
-new IntersectionObserver((entries, obs) => {
-  if (entries[0].isIntersecting) { fill.style.width = (done / all.length * 100) + '%'; obs.disconnect(); }
-}, { threshold: .5 }).observe(bar);
+bar.setAttribute('aria-valuemax', all.length); bar.setAttribute('aria-valuenow', done);
+function fillXP() { document.getElementById('xp-fill').style.width = (done / all.length * 100) + '%'; }
 
-/* ---------- Inventory ---------- */
+/* ---------- Skills: grouped list (pro) and inventory (game) ---------- */
+/* Groups for the professional skills view. Any tool not listed here lands in "Other tools". */
+const SKILL_GROUPS = [
+  ["Systems and administration", ["Windows", "macOS", "Linux", "Active Directory", "VirtualBox", "Wireshark"]],
+  ["Scripting and programming", ["PowerShell", "Bash", "Python", "Java", "R"]],
+  ["Web and data", ["HTML and CSS", "JavaScript", "PHP", "SQL", "XAMPP"]]
+];
+const useOf = Object.fromEntries(ITEMS.map(([a, n, u]) => [n, u]));
+const grouped = new Set(SKILL_GROUPS.flatMap(g => g[1]));
+const others = ITEMS.map(i => i[1]).filter(n => !grouped.has(n));
+document.getElementById('skill-groups').innerHTML = [...SKILL_GROUPS, ...(others.length ? [["Other tools", others]] : [])]
+  .map(([title, names]) => `<div><h3>${title}</h3><ul>${names.filter(n => useOf[n]).map(n => `<li><b>${n}</b><span>${useOf[n]}</span></li>`).join('')}</ul></div>`).join('');
 const items = document.getElementById('items');
 const info = document.getElementById('item-info');
 ITEMS.forEach(([abbr, name, use]) => {
   const b = document.createElement('button');
   b.className = 'item'; b.type = 'button'; b.textContent = abbr;
-  b.setAttribute('aria-label', name); b.setAttribute('aria-pressed', 'false');
+  b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', name);
   b.addEventListener('click', () => {
     items.querySelectorAll('.item').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
     info.innerHTML = `<strong>${name}</strong><span>${use}</span>`;
@@ -568,69 +722,76 @@ ITEMS.forEach(([abbr, name, use]) => {
   items.appendChild(b);
 });
 
-/* ---------- Title screen + other triggers ---------- */
+/* ---------- Mode toggle ---------- */
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const toggleBtn = document.getElementById('mode-toggle');
+function setMode(game) {
+  document.body.classList.toggle('game', game);
+  toggleBtn.setAttribute('aria-pressed', String(game));
+  document.title = game ? 'Jonas Martin | Tech Quest' : 'Jonas Martin | IT Portfolio';
+  if (game) { startStars(); setTimeout(fillXP, 400); achieve('mode', 'Secret found: game mode'); }
+  else { stopStars(); toast.classList.remove('show'); }
+}
+toggleBtn.addEventListener('click', () => setMode(!document.body.classList.contains('game')));
+document.getElementById('hint-toggle').addEventListener('click', () => { setMode(true); scrollTo(0, 0); });
 document.getElementById('start').addEventListener('click', () => {
-  document.getElementById('player').scrollIntoView();
+  document.getElementById('about').scrollIntoView();
   achieve('start', 'Player 1 has entered the game');
 });
 document.getElementById('resume-link').addEventListener('click', () => achieve('resume', 'Recruiter mode: opened the resume'));
 
-/* Continue countdown loops while contact section is visible */
+/* Continue countdown (game mode) */
 const countEl = document.getElementById('count');
-let n = 9, countTimer = null;
-new IntersectionObserver(([e]) => {
-  if (e.isIntersecting && !countTimer) {
-    countTimer = setInterval(() => { n = n <= 0 ? 9 : n - 1; countEl.textContent = n; }, 1000);
-  } else if (!e.isIntersecting) { clearInterval(countTimer); countTimer = null; }
-}).observe(countEl);
+let n = 9;
+setInterval(() => { if (document.body.classList.contains('game')) { n = n <= 0 ? 9 : n - 1; countEl.textContent = n; } }, 1000);
 
-/* ---------- Konami code easter egg ---------- */
-const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+/* Konami code: turns on game mode and drops confetti */
+const code = ['arrowup','arrowup','arrowdown','arrowdown','arrowleft','arrowright','arrowleft','arrowright','b','a'];
 let pos = 0;
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 addEventListener('keydown', e => {
-  pos = (e.key === code[pos] || e.key.toLowerCase() === code[pos]) ? pos + 1 : (e.key === code[0] ? 1 : 0);
-  if (pos === code.length) {
-    pos = 0;
-    unlocked.delete('konami');
-    achieve('konami', 'Cheat code accepted: hire Jonas');
-    if (reduce) return;
-    const colors = ['#22E4FF', '#FF4FA3', '#FFD93D', '#4DFF88'];
-    for (let i = 0; i < 80; i++) {
-      const c = document.createElement('div');
-      c.className = 'confetti';
-      c.style.left = Math.random() * 100 + 'vw';
-      c.style.background = colors[i % 4];
-      c.style.animationDuration = 1.5 + Math.random() * 2 + 's';
-      c.style.animationDelay = Math.random() * .5 + 's';
-      document.body.appendChild(c);
-      setTimeout(() => c.remove(), 4500);
-    }
+  const k = e.key.toLowerCase();
+  pos = k === code[pos] ? pos + 1 : (k === code[0] ? 1 : 0);
+  if (pos < code.length) return;
+  pos = 0;
+  if (!document.body.classList.contains('game')) setMode(true);
+  achieve('konami', 'Cheat code accepted: hire Jonas', true);
+  if (reduce) return;
+  const colors = ['#F5F5F5', '#E63946', '#FFD23F', '#FFD23F'];
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[i % 4];
+    c.style.animationDuration = 1.5 + Math.random() * 2 + 's';
+    c.style.animationDelay = Math.random() * .5 + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4500);
   }
 });
 
-/* ---------- Starfield background ---------- */
+/* ---------- Starfield (game mode only) ---------- */
 const cv = document.getElementById('stars');
 const ctx = cv.getContext('2d');
-let stars = [];
+let stars = [], raf = null;
 function size() {
   cv.width = innerWidth; cv.height = innerHeight;
   stars = Array.from({ length: Math.floor(innerWidth * innerHeight / 9000) }, () => ({
-    x: Math.random() * cv.width, y: Math.random() * cv.height,
-    s: Math.random() < .15 ? 3 : 2, v: .2 + Math.random() * .8
+    x: Math.random() * cv.width, y: Math.random() * cv.height, s: Math.random() < .15 ? 3 : 2, v: .2 + Math.random() * .8
   }));
 }
 function draw() {
   ctx.clearRect(0, 0, cv.width, cv.height);
   stars.forEach(st => {
-    ctx.fillStyle = st.s === 3 ? '#FFD93D' : '#C3B8EC';
+    ctx.fillStyle = st.s === 3 ? '#FFD23F' : '#B5B5B5';
     ctx.fillRect(Math.round(st.x), Math.round(st.y), st.s, st.s);
     if (!reduce) { st.y += st.v; if (st.y > cv.height) { st.y = 0; st.x = Math.random() * cv.width; } }
   });
-  if (!reduce) requestAnimationFrame(draw);
+  raf = reduce ? null : requestAnimationFrame(draw);
 }
-addEventListener('resize', () => { size(); if (reduce) draw(); });
-size(); draw();
+function startStars() { size(); if (!raf) draw(); }
+function stopStars() { if (raf) cancelAnimationFrame(raf); raf = null; }
+addEventListener('resize', () => { if (document.body.classList.contains('game')) size(); });
+
 </script>
 </body>
 </html>
