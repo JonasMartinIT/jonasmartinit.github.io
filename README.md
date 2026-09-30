@@ -3,10 +3,8 @@
 **Live site:** [jonasmartinit.github.io](https://jonasmartinit.github.io)
 **Status:** Complete, updated as I finish new projects
 
-<!-- To add screenshots: make a folder named "screenshots" in this repo, upload two images, then delete the arrows around the two lines below.
 ![Professional mode](screenshots/professional-mode.png)
 ![Game mode](screenshots/game-mode.png)
--->
 
 ## Overview
 
