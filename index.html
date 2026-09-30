@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jonas Martin | IT Support Quest</title>
+<title>Jonas Martin | Tech Quest</title>
 <meta name="description" content="Jonas Martin's IT portfolio: labs, projects and write-ups, presented as a quest log.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -193,6 +193,23 @@
   .confetti { position: fixed; top: -12px; width: 10px; height: 10px; z-index: 40; pointer-events: none; animation: fall linear forwards; }
   @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
+  /* ---------- Trophy case ---------- */
+  .trophies { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.25rem; }
+  .trophy {
+    background: var(--panel); border: 3px solid var(--yellow);
+    box-shadow: 6px 6px 0 var(--pink); padding: 1.25rem;
+  }
+  .trophy[data-status="progress"] { border-color: var(--cyan); }
+  .trophy[data-status="planned"] { border: 3px dashed var(--muted); box-shadow: 6px 6px 0 var(--panel-2); }
+  .trophy-icon { font: 400 1.6rem var(--pixel); color: var(--yellow); margin: 0 0 .75rem; }
+  .trophy[data-status="progress"] .trophy-icon { color: var(--cyan); }
+  .trophy[data-status="planned"] .trophy-icon { color: var(--muted); }
+  .trophy h3 { margin: 0; font-size: 1.2rem; }
+  .trophy p { margin: .25rem 0 0; color: var(--muted); }
+  .trophy .state { font: 400 .55rem var(--pixel); color: var(--yellow); margin-top: .9rem; }
+  .trophy[data-status="progress"] .state { color: var(--cyan); }
+  .trophy a { display: inline-block; margin-top: .75rem; font-weight: 600; }
+  
   @media (max-width: 760px) {
     .sheet { grid-template-columns: 1fr; }
     .avatar { max-width: 240px; margin: 0 auto; }
@@ -220,12 +237,13 @@
 <header class="title-screen">
   <div>
     <h1 class="logo">JONAS<br>MARTIN</h1>
-    <p class="subtitle">IT SUPPORT QUEST</p>
-    <p class="tagline">Administrative support specialist at UNC-Chapel Hill leveling up into IT. Every lab and project I finish gets logged here, bugs and fixes included.</p>
+    <p class="subtitle">Tech Quest</p>
+    <p class="tagline">IT student and career changer leveling up across tech: systems, web, data, design, and security.</p>
     <button class="start" id="start" type="button">PRESS START</button>
     <nav class="menu" aria-label="Main">
       <a href="#player">Player</a>
       <a href="#quests">Quests</a>
+      <a href="#trophies">Trophies</a>
       <a href="#inventory">Inventory</a>
       <a href="#map">World map</a>
       <!-- Put your resume in the repo as resume.pdf -->
@@ -264,8 +282,8 @@
         </div>
         <div>
           <dl class="stats">
-            <div><dt>CLASS</dt><dd>Support Specialist</dd></div>
-            <div><dt>HOME BASE</dt><dd>UNC-Chapel Hill, since 2020</dd></div>
+            <div><dt>CLASS</dt><dd>Multiclass Technologist</dd></div>
+            <div><dt>HOME BASE</dt><dd>North Carolina (Open To Relocation)</dd></div>
             <div><dt>GUILD</dt><dd>NC A&amp;T, B.S. Information Technology</dd></div>
             <div><dt>NEXT LEVEL</dt><dd>Graduation, May 2027</dd></div>
           </dl>
@@ -273,7 +291,7 @@
           <div class="xp" role="progressbar" aria-label="Quest objectives completed" id="xp-bar" aria-valuemin="0">
             <div class="xp-fill" id="xp-fill"></div>
           </div>
-          <p class="bio">Four years as a leasing consultant and six at UNC taught me the people side of support: stay calm, find out what someone actually needs and follow through. Now I'm building the technical side one lab at a time. XP fills as I complete quest objectives below.</p>
+          <p class="bio">With over a decade in customer-facing operations, I've handled frustrated customers, messy problems and busy days without dropping the ball. Now I'm stacking technical skills on top of that, from systems and scripting to web design and databases. XP fills as I complete quest objectives below.</p>
         </div>
       </div>
     </div>
@@ -290,6 +308,32 @@
         <button type="button" data-filter="locked" aria-pressed="false">LOCKED</button>
       </div>
       <div class="quests" id="quest-list"></div>
+    </div>
+  </section>
+
+    <!-- TROPHY CASE (certifications) -->
+  <section id="trophies">
+    <div class="wrap">
+      <h2>Trophy case</h2>
+      <div class="trophies">
+        <!-- data-status: "earned", "progress" or "planned" -->
+        <article class="trophy" data-status="progress">
+          <p class="trophy-icon" aria-hidden="true">&#9733;</p>
+          <h3>Security+</h3>
+          <p>CompTIA</p>
+          <p class="state">IN PROGRESS</p>
+        </article>
+
+        <!-- When you pass one, switch to this format:
+        <article class="trophy" data-status="earned">
+          <p class="trophy-icon" aria-hidden="true">&#9733;</p>
+          <h3>Security+</h3>
+          <p>CompTIA</p>
+          <p class="state">EARNED MONTH YEAR</p>
+          <a href="YOUR-CREDLY-LINK">Verify badge</a>
+        </article>
+        -->
+      </div>
     </div>
   </section>
 
@@ -324,11 +368,11 @@
     <div class="wrap panel continue">
       <h2>Continue?</h2>
       <p class="count" id="count" aria-hidden="true">9</p>
-      <p>Hiring for IT or end user support? Let's talk.</p>
+      <p>Hiring for a tech role or have a project in mind? Let's talk.</p>
       <div class="contact">
         <!-- Replace these with your real links -->
-        <a href="mailto:you@example.com">EMAIL</a>
-        <a href="https://www.linkedin.com/in/YOUR-PROFILE">LINKEDIN</a>
+        <a href="mailto:jonasmartinit@gmail.com">EMAIL</a>
+        <a href="https://www.linkedin.com/in/jonas-martin-704355429">LINKEDIN</a>
         <a href="https://github.com/YOUR-USERNAME">GITHUB</a>
       </div>
     </div>
